@@ -1,10 +1,29 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSpring, animated } from 'react-spring';
 import { useSwipeable } from 'react-swipeable';
 
+interface AdvisorCardProps {
+    advisor: {
+        name: string;
+        description: string;
+        // ... andere Eigenschaften des advisors
+    };
+    onAccept: (advisor: any) => void;
+    onReject: (advisor: any) => void;
+    style: any;
+    offset?: number; // Markieren Sie dies als optional mit dem '?' Zeichen
+    setOffset?: (value: React.SetStateAction<number>) => void; // Markieren Sie dies als optional mit dem '?' Zeichen
+}
+
 //@ts-ignore
-export function AdvisorCard({ advisor, onAccept, onReject }) {
-    const [offset, setOffset] = useState(0);
+export function AdvisorCard({
+                                advisor,
+                                onAccept,
+                                onReject,
+                                style,
+                                offset = 0,
+                                setOffset = () => {},
+                            }: AdvisorCardProps) {
     const [swipedOut, setSwipedOut] = useState(false);
 
     const { x } = useSpring({
@@ -22,7 +41,7 @@ export function AdvisorCard({ advisor, onAccept, onReject }) {
     };
 
     const handleEndDrag = () => {
-        if (Math.abs(offset) > 150) {  // Sensibilität des Swipens.
+        if (Math.abs(offset) > 150) {
             setSwipedOut(true);
         } else {
             setOffset(0);
@@ -35,7 +54,6 @@ export function AdvisorCard({ advisor, onAccept, onReject }) {
         trackMouse: true
     });
 
-    // Dynamische Hintergrundfarbe basierend auf der Richtung des Swipens
     const backgroundColor = offset > 0 ? `rgba(0, 255, 0, ${Math.min(Math.abs(offset) / 300, 0.7)})`
         : offset < 0 ? `rgba(255, 0, 0, ${Math.min(Math.abs(offset) / 300, 0.7)})`
             : 'transparent';
@@ -44,17 +62,21 @@ export function AdvisorCard({ advisor, onAccept, onReject }) {
         <animated.div
             {...swipeHandlers}
             style={{
-                transform: x.to(x => `translateX(${x}px) rotate(${x > 0 ? Math.min(x / 10, 30) : Math.max(x / 10, -30)}deg)`),
+                transform: x.to((x: number) => `translateX(${x}px) rotate(${x > 0 ? Math.min(x / 10, 30) : Math.max(x / 10, -30)}deg)`),
                 position: 'relative',
                 zIndex: 1,
+                ...style,
             }}
         >
-            <div className="card" style={{ background: backgroundColor }}>
-                <img src={advisor.image} alt={advisor.name} className="card-img-top" />
+            <div className="card">
+                <img src={"https://thispersondoesnotexist.com/"} alt={advisor.name} className="card-img-top" style={{zIndex: 0, maxHeight: "350px"}} />
+
+                {/* Farbliches Overlay */}
+                <div className="overlay" style={{ background: backgroundColor, position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, zIndex: 1 }}></div>
+
                 <div className="card-body">
                     <h5 className="card-title">{advisor.name}</h5>
                     <p className="card-text">{advisor.description}</p>
-                    {/* Add more details if needed */}
                 </div>
             </div>
         </animated.div>
