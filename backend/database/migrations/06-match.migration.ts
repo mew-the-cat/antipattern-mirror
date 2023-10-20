@@ -1,24 +1,33 @@
 import { DataTypes, QueryInterface } from 'sequelize';
 
 export async function up(queryInterface: QueryInterface, Sequelize: any): Promise<void> {
-  await queryInterface.createTable('User_Interrest', {
-    user_id: {
+  await queryInterface.createTable('Matches', {
+    client_id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
       allowNull: false,
       references: {
-        model: 'Users',
+        model: 'Clients',
         key: 'id',
       },
     },
-    interrest_id: {
+    advisor_id: {
       type: Sequelize.INTEGER.UNSIGNED,
-      primaryKey: true,
+      primaryKey: true, 
       allowNull: false,
       references: {
-        model: 'Interrests',
+        model: 'Advisors',
         key: 'id',
       },
+    },
+    score: {
+      type: Sequelize.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    accepted: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
     },
     created: {
         type: Sequelize.DATE,
@@ -38,5 +47,5 @@ export async function up(queryInterface: QueryInterface, Sequelize: any): Promis
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {
-  await queryInterface.dropTable('User_Interrest');
+  await queryInterface.dropTable('Matches');
 }
