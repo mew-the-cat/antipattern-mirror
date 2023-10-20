@@ -52,13 +52,11 @@ export function Index() {
                         advisor={advisors[currentAdvisorIndex + 1]}
                         onAccept={() => {}}
                         onReject={() => {}}
-                        offset={offset}
-                        setOffset={setOffset}
                         style={{
                             position: 'absolute',
                             zIndex: 0,
                             transform: 'scale(0.95)',
-                            opacity: Math.abs(offset) / window.innerWidth,
+                            opacity: Math.abs(offset) / window.innerWidth, // Entfernen Sie diese Zeile, um den Opazitätseffekt zu verhindern
                         }}
                     />
                 )}
