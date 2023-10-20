@@ -15,11 +15,13 @@ export function Index() {
     const handleAccept = (advisor: { name: any; }) => {
         console.log(`Berater ${advisor.name} wurde akzeptiert.`);
         setCurrentAdvisorIndex(prevIndex => prevIndex + 1);
+        setOffset(0); // Offset zurücksetzen
     };
 
     const handleReject = (advisor: { name: any; }) => {
         console.log(`Berater ${advisor.name} wurde abgelehnt.`);
         setCurrentAdvisorIndex(prevIndex => prevIndex + 1);
+        setOffset(0); // Offset zurücksetzen
     };
 
     if (currentAdvisorIndex >= advisors.length) {
@@ -56,7 +58,6 @@ export function Index() {
                             position: 'absolute',
                             zIndex: 0,
                             transform: 'scale(0.95)',
-                            opacity: Math.abs(offset) / window.innerWidth, // Entfernen Sie diese Zeile, um den Opazitätseffekt zu verhindern
                         }}
                     />
                 )}

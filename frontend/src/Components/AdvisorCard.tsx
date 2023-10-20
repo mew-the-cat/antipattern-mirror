@@ -12,7 +12,7 @@ interface AdvisorCardProps {
     onReject: (advisor: any) => void;
     style: any;
     offset?: number; // Markieren Sie dies als optional mit dem '?' Zeichen
-    setOffset?: (value: React.SetStateAction<number>) => void; // Markieren Sie dies als optional mit dem '?' Zeichen
+    setOffset?: ((value: React.SetStateAction<number>) => void) | undefined;
 }
 
 //@ts-ignore
@@ -22,8 +22,10 @@ export function AdvisorCard({
                                 onReject,
                                 style,
                                 offset = 0,
-                                setOffset = () => {},
+                                setOffset = undefined,
                             }: AdvisorCardProps) {
+    const swipeable = typeof setOffset === 'function';
+
     const [swipedOut, setSwipedOut] = useState(false);
 
     const { x } = useSpring({
@@ -37,20 +39,24 @@ export function AdvisorCard({
     });
 
     const handleDrag = (event: { deltaX: React.SetStateAction<number>; }) => {
-        setOffset(event.deltaX);
+        if (setOffset) {
+            setOffset(event.deltaX);
+        }
     };
 
     const handleEndDrag = () => {
         if (Math.abs(offset) > 150) {
             setSwipedOut(true);
         } else {
-            setOffset(0);
+            if (setOffset) {
+                setOffset(0);
+            }
         }
     };
 
     const swipeHandlers = useSwipeable({
-        onSwiping: handleDrag,
-        onSwiped: handleEndDrag,
+        onSwiping: swipeable ? handleDrag : () => {},
+        onSwiped: swipeable ? handleEndDrag : () => {},
         trackMouse: true
     });
 
@@ -60,7 +66,7 @@ export function AdvisorCard({
 
     return (
         <animated.div
-            {...swipeHandlers}
+            {...(swipeable ? swipeHandlers : {})}
             style={{
                 transform: x.to((x: number) => `translateX(${x}px) rotate(${x > 0 ? Math.min(x / 10, 30) : Math.max(x / 10, -30)}deg)`),
                 position: 'relative',
