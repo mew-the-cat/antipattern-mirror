@@ -1,88 +1,95 @@
 import React, { useState } from 'react';
-import {Container, Nav, Navbar} from 'react-bootstrap';
-import { AdvisorCard } from '../Components/AdvisorCard';
-
-const advisors = [
-    { id: 1, name: 'Berater 1', image: 'path_to_image1.jpg', description: 'Berater 1 Beschreibung' },
-    { id: 2, name: 'Berater 2', image: 'path_to_image2.jpg', description: 'Berater 2 Beschreibung' },
-    // Weitere Berater...
-];
+import "../Assets/css/index.css"
+import {Button, Card, Col, Container, Form, Row, Tab, Tabs} from "react-bootstrap";
 
 export function Index() {
-    const [currentAdvisorIndex, setCurrentAdvisorIndex] = useState(0);
-    const [offset, setOffset] = useState(0);
-
-    const handleAccept = (advisor: { name: any; }) => {
-        console.log(`Berater ${advisor.name} wurde akzeptiert.`);
-        setCurrentAdvisorIndex(prevIndex => prevIndex + 1);
-        setOffset(0); // Offset zurücksetzen
-    };
-
-    const handleReject = (advisor: { name: any; }) => {
-        console.log(`Berater ${advisor.name} wurde abgelehnt.`);
-        setCurrentAdvisorIndex(prevIndex => prevIndex + 1);
-        setOffset(0); // Offset zurücksetzen
-    };
-
-    if (currentAdvisorIndex >= advisors.length) {
-        return <div>Keine weiteren Berater verfügbar.</div>;
-    }
-
-    const currentAdvisor = advisors[currentAdvisorIndex];
+    const [key, setKey] = useState('login');
 
     return (
-        <div className="d-flex flex-column vh-100">
-            {/* Navigationsmenü */}
-            <Navbar bg="dark" variant="dark">
-                <Container fluid className="justify-content-between">
-                    <Navbar.Brand href="#">FinTwin</Navbar.Brand>
-                    <Nav>
-                        <Nav.Link href="#home"><i className="fa fa-handshake-o fa-2x"></i></Nav.Link>
-                        <Nav.Link href="#link1"><i className="fa fa-comment-o fa-2x"></i></Nav.Link>
-                        <Nav.Link href="#link2"><i className="fa fa-user-o fa-2x"></i></Nav.Link>
-                    </Nav>
-                </Container>
-            </Navbar>
+        <>
+            <div className="video-wrapper">
+                <div className="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/0RpdPzJgaBw?controls=0&autoplay=1&mute=1&loop=1&playlist=0RpdPzJgaBw"
+                        frameBorder="0"
+                        allow="autoplay; fullscreen"
+                        allowFullScreen>
+                    </iframe>
+                </div>
+            </div>
+            <Row className={"mb-3 mt-3"}>
+                <Col xs="6">
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>FinTwin</Card.Title>
+                            <Card.Text>
+                                Imagine finding your perfect financial partner, tailored to your needs, goals, and even hobbies – all with just a few clicks. Welcome to FinTwin. Instead of thrusting you into the vast world of banking, our app guides you directly to advisors who match you not just professionally, but personally. And the best part? You're in control. By actively choosing, you value the relationship with your advisor more and achieve better outcomes. With FinTwin, we're making finance personal and effective. Support an innovation in banking that's revolutionizing the customer experience.
+
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col xs="6">
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Join us</Card.Title>
+                            <Tabs
+                                id="controlled-tab"
+                                activeKey={key}
+                                onSelect={(k) => k && setKey(k)}
+                            >
+                                <Tab eventKey="login" title="Login">
+                                    <Form style={{ marginTop: '20px' }}>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Email</Form.Label>
+                                            <Form.Control type="email" placeholder="Email eingeben" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Password</Form.Label>
+                                            <Form.Control type="password" placeholder="Passwort" />
+                                        </Form.Group>
+
+                                        <Button variant="primary" type="submit">
+                                            Login
+                                        </Button>
+                                    </Form>
+                                </Tab>
+                                <Tab eventKey="register" title="Registrieren">
+                                    <Form style={{ marginTop: '20px' }}>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Name</Form.Label>
+                                            <Form.Control type="text" placeholder="Vollständiger Name" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Email</Form.Label>
+                                            <Form.Control type="email" placeholder="Email eingeben" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Passwort</Form.Label>
+                                            <Form.Control type="password" placeholder="Password" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Passwort bestätigen</Form.Label>
+                                            <Form.Control type="password" placeholder="Please repeat password" />
+                                        </Form.Group>
+
+                                        <Button variant="primary" type="submit">
+                                            Registration
+                                        </Button>
+                                    </Form>
+                                </Tab>
+                            </Tabs>
+                        </Card.Body>
+                    </Card>
+
+                </Col>
+            </Row>
+        </>
 
 
-            {/* Hauptinhalt */}
-            <Container fluid className="flex-grow-1 d-flex justify-content-center align-items-center">
-                {/* Nächste Karte (falls verfügbar) */}
-                {currentAdvisorIndex + 1 < advisors.length && (
-                    <AdvisorCard
-                        key={advisors[currentAdvisorIndex + 1].id}
-                        advisor={advisors[currentAdvisorIndex + 1]}
-                        onAccept={() => {}}
-                        onReject={() => {}}
-                        style={{
-                            position: 'absolute',
-                            zIndex: 0,
-                            transform: 'scale(0.95)',
-                        }}
-                    />
-                )}
-
-                {/* Aktuelle Karte */}
-                <AdvisorCard
-                    key={currentAdvisor.id}
-                    advisor={currentAdvisor}
-                    onAccept={handleAccept}
-                    onReject={handleReject}
-                    offset={offset}
-                    setOffset={setOffset}
-                    style={{
-                        position: 'absolute',
-                        zIndex: 1,
-                    }}
-                />
-            </Container>
-
-            {/* Footer */}
-            <footer className="py-4 bg-dark text-white text-center">
-                <Container>
-                    © 2023 FinTwin. Alle Rechte vorbehalten.
-                </Container>
-            </footer>
-        </div>
     );
 }

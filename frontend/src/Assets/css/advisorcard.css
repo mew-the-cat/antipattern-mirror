@@ -1,0 +1,28 @@
+.card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backface-visibility: hidden;
+    visibility: hidden;
+    transform: rotateY(180deg);
+    background-color: white;
+    border: 1px solid #e0e0e0;
+}
+
+.card-back.visible {
+    visibility: visible;
+    background-color: white;
+}
+
+.card {
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    border: 1px solid #e0e0e0;
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
