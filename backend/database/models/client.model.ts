@@ -38,18 +38,6 @@ Client.init(
             autoIncrement: true,
             allowNull: false,
         },
-        exploration_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
-        battle_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
-        team_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
         client_type: {
             type: DataTypes.ENUM(...client_types),
             allowNull: false,

@@ -39,18 +39,6 @@ Advisor.init(
             autoIncrement: true,
             allowNull: false,
         },
-        exploration_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
-        battle_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
-        team_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
         advisor_type: {
             type: DataTypes.ENUM(...advisor_types),
             allowNull: false,

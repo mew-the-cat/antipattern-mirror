@@ -1,9 +1,10 @@
-import {Model, DataTypes, Optional, Association} from 'sequelize';
+import {Model, DataTypes, Optional, Association, BelongsToMany} from 'sequelize';
 import sequelize from "./sequelize"; // Make sure to import your Sequelize instance
 import crypto from 'crypto';
 import { Mail } from '../../services/mail.service';
 import { Salt } from '../../services/salt.service';
 import {UserAttributes, UserCreationAttributes} from "../interfaces/user.interface";
+import { Interrest } from './interrest.mode';
 
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
@@ -19,10 +20,12 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     public updated!: Date;
     public deleted?: Date;
 
+    public interrests?: Interrest[];
+
 
     // Define associations
     public static associations: {
-       // group: Association<User, Group>;
+        interrests: BelongsToMany<User, Interrest>;
     }
 
     static hashPassword(password: string) {
@@ -124,6 +127,7 @@ User.init(
 
 
 // Define associations
+User.belongsToMany(Interrest, { through: 'User_Interrest'});
 
 
 export { User };
