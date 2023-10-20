@@ -10,6 +10,7 @@ const advisors = [
 
 export function Index() {
     const [currentAdvisorIndex, setCurrentAdvisorIndex] = useState(0);
+    const [offset, setOffset] = useState(0);
 
     const handleAccept = (advisor: { name: any; }) => {
         console.log(`Berater ${advisor.name} wurde akzeptiert.`);
@@ -30,24 +31,50 @@ export function Index() {
     return (
         <div className="d-flex flex-column vh-100">
             {/* Navigationsmenü */}
-            <Navbar bg="dark" variant="dark" expand="lg" className="flex-row float-right">
-                <Container >
-                    <Navbar.Brand href="#"></Navbar.Brand>
-                    <Nav className="m-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
-                        <Nav.Link href="#link1">Link 1</Nav.Link>
-                        <Nav.Link href="#link2">Link 2</Nav.Link>
+            <Navbar bg="dark" variant="dark">
+                <Container fluid className="justify-content-between">
+                    <Navbar.Brand href="#">FinTwin</Navbar.Brand>
+                    <Nav>
+                        <Nav.Link href="#home"><i className="fa fa-handshake-o fa-2x"></i></Nav.Link>
+                        <Nav.Link href="#link1"><i className="fa fa-comment-o fa-2x"></i></Nav.Link>
+                        <Nav.Link href="#link2"><i className="fa fa-user-o fa-2x"></i></Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
 
+
             {/* Hauptinhalt */}
             <Container fluid className="flex-grow-1 d-flex justify-content-center align-items-center">
+                {/* Nächste Karte (falls verfügbar) */}
+                {currentAdvisorIndex + 1 < advisors.length && (
+                    <AdvisorCard
+                        key={advisors[currentAdvisorIndex + 1].id}
+                        advisor={advisors[currentAdvisorIndex + 1]}
+                        onAccept={() => {}}
+                        onReject={() => {}}
+                        offset={offset}
+                        setOffset={setOffset}
+                        style={{
+                            position: 'absolute',
+                            zIndex: 0,
+                            transform: 'scale(0.95)',
+                            opacity: Math.abs(offset) / window.innerWidth,
+                        }}
+                    />
+                )}
+
+                {/* Aktuelle Karte */}
                 <AdvisorCard
                     key={currentAdvisor.id}
                     advisor={currentAdvisor}
                     onAccept={handleAccept}
                     onReject={handleReject}
+                    offset={offset}
+                    setOffset={setOffset}
+                    style={{
+                        position: 'absolute',
+                        zIndex: 1,
+                    }}
                 />
             </Container>
 

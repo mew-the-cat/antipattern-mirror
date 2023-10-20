@@ -3,8 +3,7 @@ import { useSpring, animated } from 'react-spring';
 import { useSwipeable } from 'react-swipeable';
 
 //@ts-ignore
-export function AdvisorCard({ advisor, onAccept, onReject }) {
-    const [offset, setOffset] = useState(0);
+export function AdvisorCard({ advisor, onAccept, onReject, style, offset, setOffset }) {
     const [swipedOut, setSwipedOut] = useState(false);
 
     const { x } = useSpring({
@@ -44,13 +43,14 @@ export function AdvisorCard({ advisor, onAccept, onReject }) {
         <animated.div
             {...swipeHandlers}
             style={{
-                transform: x.to(x => `translateX(${x}px) rotate(${x > 0 ? Math.min(x / 10, 30) : Math.max(x / 10, -30)}deg)`),
+                transform: x.to((x: number) => `translateX(${x}px) rotate(${x > 0 ? Math.min(x / 10, 30) : Math.max(x / 10, -30)}deg)`),
                 position: 'relative',
                 zIndex: 1,
+                ...style,  // Fügen Sie den style-Prop hinzu
             }}
         >
             <div className="card" style={{ background: backgroundColor }}>
-                <img src={advisor.image} alt={advisor.name} className="card-img-top" />
+                <img src={"https://thispersondoesnotexist.com/"} alt={advisor.name} className="card-img-top" style={{zIndex: -1, maxHeight: "350px"}} />
                 <div className="card-body">
                     <h5 className="card-title">{advisor.name}</h5>
                     <p className="card-text">{advisor.description}</p>
