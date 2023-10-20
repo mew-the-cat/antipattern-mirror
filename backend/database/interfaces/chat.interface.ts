@@ -4,8 +4,8 @@ import { Advisor } from "../models/advisor.model";
 
 export interface ChatAttributes {
     id: number;
-    client_id?: Client
-    advisor_id?: Advisor
+    client_id?: Client;
+    advisor_id?: Advisor;
     created: Date;
     updated: Date;
     deleted?: Date;
