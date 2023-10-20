@@ -12,7 +12,6 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     public email!: string;
     public password!: Buffer;
     public salt!: Buffer;
-    public group_id!: number;
     public confirmation!: boolean;
     public signup_verified!: boolean;
     public premium_end?: Date;
@@ -24,11 +23,6 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     // Define associations
     public static associations: {
        // group: Association<User, Group>;
-    }
-
-    public static associate() {
-      //  User.belongsTo(Group, {foreignKey: 'group_id'});
-
     }
 
     static hashPassword(password: string) {
@@ -87,11 +81,6 @@ User.init(
         salt: {
             type: DataTypes.BLOB,
             allowNull: false,
-        },
-        group_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 2,
         },
         confirmation: {
             type: DataTypes.BOOLEAN,

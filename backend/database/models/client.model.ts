@@ -1,71 +1,36 @@
-import {Model, DataTypes, Optional, Association} from 'sequelize';
-import sequelize from "./sequelize"; // Make sure to import your Sequelize instance
-import crypto from 'crypto';
-import { Mail } from '../../services/mail.service';
-import { Salt } from '../../services/salt.service';
+import { Model, DataTypes, Optional, Sequelize } from 'sequelize';
+import sequelize from "./sequelize";
 
-class User {
+import { User } from './user.model';
+import { ClientType } from '../enums/clienttype.enum';
+import { Permission } from '../enums/permission.enum';
+import {ClientAttributes, ClientCreationAttributes} from "../interfaces/client.interface";
+
+class Client extends Model<ClientAttributes, ClientCreationAttributes> implements ClientAttributes {
     public id!: number;
-    public name!: string;
-    public email!: string;
-    public password!: Buffer;
-    public salt!: Buffer;
-    public group_id!: number;
-    public confirmation!: boolean;
-    public signup_verified!: boolean;
-    public premium_end?: Date;
+
+    public client_type!: ClientType;
+    public user_id!: number;
+    public permission!: Permission;
     public created!: Date;
     public updated!: Date;
     public deleted?: Date;
 
-
-    // Define associations
-    public static associations: {
-        group: Association<User, Group>;
-    }
-
     public static associate() {
-        User.belongsTo(Group, {foreignKey: 'group_id'});
-
-        User.belongsToMany(Battle, { through: Staff, foreignKey: 'user_id'});
-        User.belongsToMany(Team, { through: Staff, foreignKey: 'user_id'});
-        User.belongsToMany(Exploration, { through: Staff, foreignKey: 'user_id'});
-    }
-
-    static hashPassword(password: string) {
-        const env = process.env.NODE_ENV || 'development';
-        const salt = env === 'development' ? Buffer.from('userSaltuserSaltuserSaltuserSalt') : crypto.randomBytes(32);
-        return [salt, crypto.pbkdf2Sync(password, salt, 310000, 32, 'sha256')];
-    }
-
-    static sendVerificationMail(user: User, options: any) {
-        const verificationCode = crypto.createHash('md5').update(
-            user.password.toString('hex').concat(user.salt.toString('hex')).concat(Salt.verification)
-        ).digest('hex');
-
-        Mail.send(
-            user.email,
-            '______________: Verifizierung deines Accounts!',
-            Mail.createVerificationMail(user, verificationCode, false),
-            Mail.createVerificationMail(user, verificationCode, true)
-        )
-            .then((smi) => {
-                console.info('User Account registration verification mail sent with verification code: ' + verificationCode);
-                options.transaction.commit();
-            })
-            .catch((reason) => {
-                console.warn(new Error('User Account registration verification mail could not be sent: '), reason);
-                options.transaction.rollback();
-            });
-    }
-
-    static validatePassword(insecurePassword: string, user: User) {
-        const securePassword = crypto.pbkdf2Sync(insecurePassword, user.salt, 310000, 32, 'sha256');
-        return crypto.timingSafeEqual(user.password, securePassword);
+        Client.belongsTo(User, {foreignKey: 'user_id',});
     }
 }
 
-User.init(
+
+const client_types = Object.values(ClientType).filter(
+    (v, i, a) => a.indexOf(v) === i
+);
+
+const permissions = Object.values(Permission).filter(
+    (v, i, a) => a.indexOf(v) === i
+);
+
+Client.init(
     {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
@@ -73,40 +38,29 @@ User.init(
             autoIncrement: true,
             allowNull: false,
         },
-        name: {
-            type: DataTypes.TEXT('tiny'),
-            allowNull: false,
-        },
-        email: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-        },
-        password: {
-            type: DataTypes.BLOB,
-            allowNull: false,
-        },
-        salt: {
-            type: DataTypes.BLOB,
-            allowNull: false,
-        },
-        group_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 2,
-        },
-        confirmation: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            allowNull: false,
-        },
-        signup_verified: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            allowNull: false,
-        },
-        premium_end: {
-            type: DataTypes.DATE,
+        exploration_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
+        },
+        battle_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
+        team_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
+        client_type: {
+            type: DataTypes.ENUM(...client_types),
+            allowNull: false,
+        },
+        user_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
+        },
+        permission: {
+            type: DataTypes.ENUM(...permissions),
+            allowNull: false,
         },
         created: {
             type: DataTypes.DATE,
@@ -123,7 +77,7 @@ User.init(
     },
     {
         sequelize,
-        modelName: 'User',
+        modelName: 'Client',
         timestamps: true,
         paranoid: true,
         createdAt: 'created',
@@ -132,10 +86,38 @@ User.init(
     }
 );
 
-// Import models
 
 
-// Define associations
+function buildIdSuffixMap(enumObject: Record<string, string>): Record<string, string> {
+    const output: Record<string, string> = {};
 
+    for (const key of Object.keys(enumObject)) {
+        const value = enumObject[key];
+        output[`${value}_id`] = value;
+    }
 
-export { User };
+    return output;
+}
+
+Client.addHook('beforeValidate', (client, options) => {
+    const clientTypeMap = buildIdSuffixMap(ClientType);
+
+    for (const [field, expectedType] of Object.entries(clientTypeMap)) {
+        if (client.getDataValue(field as keyof ClientAttributes) && client.getDataValue("client_type") !== expectedType) {
+            throw new Error(`Wenn ${field} einen Wert hat, muss progress_type den Wert "${expectedType}" haben.`);
+        }
+    }
+
+    // Überprüfen Sie, ob mindestens eines der Felder einen Wert hat
+    const hasAtLeastOneClient = Object.keys(clientTypeMap).some(field => client.getDataValue(field as keyof ClientAttributes));
+
+    if (!hasAtLeastOneClient) {
+        const fieldsList = Object.keys(clientTypeMap).join(', ');
+        throw new Error(`Mindestens eines der Felder ${fieldsList} muss einen Wert haben.`);
+    }
+});
+
+export { Client };
+
+// Bei belongsTo wird der foreignKey in der aufrufenden Tabelle gesucht. => A.belongsTo(B, {foreignKey: "C"}) Dann guckt man für C in A nach.
+// Bei hasOne wird der foreignKey in der zugeordneten Tabelle (Target-Tabelle) gesucht. => A.hasOne(B, {foreignKey: "C"}) Dann guckt man für C in B nach.
