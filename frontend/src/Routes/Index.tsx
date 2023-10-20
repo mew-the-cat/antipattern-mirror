@@ -17,8 +17,8 @@ export function Index() {
                     </iframe>
                 </div>
             </div>
-            <Row className={"mb-3 mt-3"}>
-                <Col xs="6">
+            <Row className={"mb-3"}>
+                <Col md="6" xs="12" className={"mt-3"}>
                     <Card>
                         <Card.Body>
                             <Card.Title>FinTwin</Card.Title>
@@ -29,7 +29,7 @@ export function Index() {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col xs="6">
+                <Col md="6" xs="12" className={"mt-3"}>
                     <Card>
                         <Card.Body>
                             <Card.Title>Join us</Card.Title>
