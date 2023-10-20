@@ -6,6 +6,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import {Match} from "./Routes/Match";
 import {useLocalStorage} from "./Hooks/useLocaleStorage";
 import { Menu } from "./Components/Menu";
+import {Chat} from "./Routes/Chat";
 
 export function App() {
     const [authenticationToken, setAuthenticationToken] = useLocalStorage("authenticationToken", {
@@ -34,6 +35,10 @@ export function App() {
 
                     <Route path="/match" element={
                         <Match />
+                    } />
+
+                    <Route path="/chat" element={
+                        <Chat />
                     } />
 
                 </Routes>
