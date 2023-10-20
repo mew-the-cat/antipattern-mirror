@@ -4,7 +4,7 @@ import "../Assets/css/messaging.css";
 
 const Messaging = () => {
     return (
-        <div className="messaging">
+        <div className="messaging mt-3">
             <div className="inbox_msg">
                 <div className="inbox_people">
                     <div className="headind_srch">
