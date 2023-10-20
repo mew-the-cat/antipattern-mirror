@@ -6,7 +6,6 @@ export interface UserAttributes {
     email: string;
     password: Buffer;
     salt: Buffer;
-    group_id: number;
     confirmation: boolean;
     signup_verified: boolean;
     premium_end?: Date;
@@ -15,4 +14,4 @@ export interface UserAttributes {
     deleted?: Date;
 }
 
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'created' | 'updated' | 'signup_verified' | 'group_id'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'created' | 'updated' | 'signup_verified'> {}
