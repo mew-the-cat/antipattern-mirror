@@ -1,2 +1,3 @@
-# antipattern-mirror
-Secret Project for Collabothon 2023
+# FinTwin v0.1
+
+Your financial soulmate :3
