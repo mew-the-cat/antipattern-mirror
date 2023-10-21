@@ -33,7 +33,14 @@ export default class MatchController {
             attributes: ["name"],
           }
         ],
-        attributes: []
+        attributes: [
+          "firstname",
+          "lastname",
+          "email",
+          "street",
+          "location",
+          "zip",
+        ]
       });
       console.log("clientPref");
       console.log(clientPref);
@@ -55,7 +62,14 @@ export default class MatchController {
             attributes: ["name"],
           }
         ],
-        attributes: []
+        attributes: [
+            "firstname",
+            "lastname",
+            "email",
+            "street",
+            "location",
+            "zip",
+        ]
 
       })
       console.log("AdvisorData");
@@ -73,7 +87,8 @@ export default class MatchController {
           dataset.forEach(element => {if (userset.has(element)) {scoreset.add(element)}})
           // maybe only userset size for max. personalization!
           const score =  scoreset.size / (userset.size + dataset.size)
-          scores.push({ id: data[i].id, score: score });
+          //@ts-ignore
+          scores.push({ id: data[i].id, score: score , advisorData: data[i].advisorData});
         }
         return scores;
       };
@@ -89,7 +104,8 @@ export default class MatchController {
           //@ts-ignore
             id: AdvisorData[i].Advisors[0].id,
           //@ts-ignore
-            interests: AdvisorData[i].Interests.map((interest: { name: string; }) => interest.name)
+            interests: AdvisorData[i].Interests.map((interest: { name: string; }) => interest.name),
+            advisorData: AdvisorData[i]
         })
       }
       console.log("data Advisor");
@@ -100,14 +116,17 @@ export default class MatchController {
         //@ts-ignore
         id: clientPref.Clients[0].id,
         //@ts-ignore
-        interests: clientPref.getDataValue("Interests").map((interest: { name: string; }) => interest.name)
+        interests: clientPref.getDataValue("Interests").map((interest: { name: string; }) => interest.name),
+        clientData: clientPref
       });
       // Wieder einkommentieren
       const computedScores = computeScores({
         //@ts-ignore
         id: clientPref.Clients[0].id,
         //@ts-ignore
-        interests: clientPref.getDataValue("Interests").map((interest: { name: string; }) => interest.name)
+        interests: clientPref.getDataValue("Interests").map((interest: { name: string; }) => interest.name),
+        //@ts-ignore
+        clientData: clientPref
       }, data);
       const sortedScoredAdvisors = computedScores.sort((a, b) => b.score - a.score);
       console.log("sortedScoredAdvisors");

@@ -13,17 +13,17 @@ import jwtDecode from "jwt-decode";
 // Anbindung an Google LM
 // Einfach nur einen Endpoint wo man was hinschicken kann und was zurück bekommt
 
-const advisors = [
+/*const advisors = [
     { id: 1, name: 'Berater 1', image: 'path_to_image1.jpg', description: 'Berater 1 Beschreibung' },
     { id: 2, name: 'Berater 2', image: 'path_to_image2.jpg', description: 'Berater 2 Beschreibung' },
     // Weitere Berater...
-];
+];*/
 
 export function Match(props: auth) {
     const [currentAdvisorIndex, setCurrentAdvisorIndex] = useState(0);
     const [offset, setOffset] = useState(0);
 
-    const [advisorList, setAdvisorList] = useState([]);
+    const [advisors, setAdvisors] = useState([]);
 
     useEffect(() => {
         //@ts-ignore
@@ -38,26 +38,7 @@ export function Match(props: auth) {
             }
             throw value;
         }).then((value) => {
-
-            for (let i = 0; i < value.length; i++) {
-                fetch(process.env.REACT_APP_BACKEND + "/user/" + value[i].id, {
-                    method: "GET",
-                }).then((value) => {
-                    if (value.ok) {
-                        return value.json();
-                    }
-                    throw value;
-                }).then((value) => {
-                    //@ts-ignore
-                    setAdvisorList([...advisorList, value]);
-                    console.log(value);
-                }).catch((reason) => {
-
-                });
-            }
-
-
-
+            setAdvisors(value);
             console.log(value);
         }).catch((reason) => {
 
@@ -90,8 +71,10 @@ export function Match(props: auth) {
                 {/* Nächste Karte (falls verfügbar) */}
                 {currentAdvisorIndex + 1 < advisors.length && (
                     <AdvisorCard
-                        key={advisors[currentAdvisorIndex + 1].id}
-                        advisor={advisors[currentAdvisorIndex + 1]}
+                        //@ts-ignore
+                        key={advisors[currentAdvisorIndex + 1].Advisors[0].id}
+                        //@ts-ignore
+                        advisor={advisors[currentAdvisorIndex + 1].advisorData}
                         onAccept={() => {}}
                         onReject={() => {}}
                         style={{
