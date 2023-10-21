@@ -2,7 +2,7 @@ import express from "express";
 import { Advisor } from "../database/models/advisor.model";
 import sequelize from "../database/models/sequelize";
 import { Match } from "../database/models/match.model";
-import { Interest } from "../database/models/interest.mode";
+import { Interest } from "../database/models/interest.model";
 import { User } from "../database/models/user.model";
 import { UserInterest } from "../database/models/userinterest.model";
 
@@ -77,10 +77,10 @@ export default class MatchController {
       const sortByScore = (userScores: { id: number; score: number }[]) => {
         // Sorting the array of objects by the 'score' property
         userScores.sort((a, b) => b.score - a.score);
+      }
 
       const computedScores = computeScores(clientPref, AdvisorData);
       const sortedScoredAdvisors = sortByScore(computedScores);
-      // end my part
 
       res.json(sortedScoredAdvisors);
     } catch (error) {
