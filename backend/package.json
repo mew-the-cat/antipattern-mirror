@@ -4,7 +4,7 @@
   "description": "backend",
   "main": "app.ts",
   "scripts": {
-    "start": "set NODE_ENV=production&& export NODE_ENV=production&& npx tsc && node dist/app.js",
+    "start": "set NODE_ENV=production&& export NODE_ENV=production&& set REACT_APP_FRONTEND=http://localhost:3000&& export REACT_APP_FRONTEND='http://localhost:3000'&& npx tsc && node dist/app.js",
     "build": "npx tsc",
     "migrate": "set NODE_ENV=development tsc && sequelize-cli db:migrate"
   },

@@ -8,6 +8,7 @@ import {useLocalStorage} from "./Hooks/useLocaleStorage";
 import { Menu } from "./Components/Menu";
 import {Chat} from "./Routes/Chat";
 import {Logout} from "./Routes/Logout";
+import {Verify} from "./Routes/Verify";
 
 export function App() {
     const [authenticationToken, setAuthenticationToken] = useLocalStorage("authenticationToken", undefined);
@@ -55,6 +56,14 @@ export function App() {
                     <Route path="/logout" element={
                         <Logout
                             key={"logout"}
+                            authenticationToken={authenticationToken}
+                            setAuthenticationToken={setAuthenticationToken}
+                        />
+                    } />
+
+                    <Route path="/registration/verification" element={
+                        <Verify
+                            key={"verify"}
                             authenticationToken={authenticationToken}
                             setAuthenticationToken={setAuthenticationToken}
                         />
