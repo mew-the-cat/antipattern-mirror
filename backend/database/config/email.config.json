@@ -1,11 +1,11 @@
 {
     "development": {
-        "host": "config.smtp.host",
-        "port": "config.smtp.port",
+        "host": "smtp.ethereal.email",
+        "port": "587",
         "secure": false,
         "auth": {
-            "user": "config.username",
-            "pass": "config.password"
+            "user": "augustine.will16@ethereal.email",
+            "pass": "PUtcyAFXvkefwkeUhK"
         }
     }
 }
