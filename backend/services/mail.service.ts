@@ -4,7 +4,7 @@ import {User} from "../database/models/user.model";
 import dayjs from "dayjs";
 
 const env = process.env.NODE_ENV || 'development';
-const config = require('../../../database/config/email.config.json')[env];
+const config = require('../../database/config/email.config.json')[env];
 
 const transporter = nodemailer.createTransport({
     host: config.smtp.host,
