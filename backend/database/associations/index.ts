@@ -1,9 +1,9 @@
 import {Advisor} from "../models/advisor.model";
-import {Chat} from "../models/chat.mode";
+import {Chat} from "../models/chat.model";
 import {Client} from "../models/client.model";
-import {Interest} from "../models/interest.mode";
-import {Match} from "../models/match.mode";
-import {Message} from "../models/message.mode";
+import {Interest} from "../models/interest.model";
+import {Match} from "../models/match.model";
+import {Message} from "../models/message.model";
 import {User} from "../models/user.model";
 import {UserInterest} from "../models/userinterest.model";
 

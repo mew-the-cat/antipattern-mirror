@@ -1,8 +1,7 @@
 import express from "express";
 import { Advisor } from "../database/models/advisor.model";
 import sequelize from "../database/models/sequelize";
-import { Match } from "../database/models/match.mode";
-import { Chat } from "../database/models/chat.mode";
+import { Match } from "../database/models/match.model";
 import { Interest } from "../database/models/interest.mode";
 import { User } from "../database/models/user.model";
 import { UserInterest } from "../database/models/userinterest.model";
@@ -98,14 +97,14 @@ export default class MatchController {
       const clientId = Number(req.params.clientId);
       const advisorId = Number(req.params.advisorId);
 
-      const newMatch = await Match.create({
+      await Match.create({
         client_id: clientId,
         advisor_id: advisorId,
         score: 0.5,
         accepted: false,
       });
 
-      res.status(201).json(newMatch);
+      res.status(201);
     } catch (error) {
       return next(error);
     }
@@ -129,14 +128,7 @@ export default class MatchController {
 
       await match.save();
 
-      // Create new chat entity
-
-      const newChat = await Chat.create({
-        client_id: match.client_id,
-        advisor_id: match.advisor_id,
-      });
-
-      res.status(201).json(newChat);
+      res.status(200);
     } catch (error) {
       return next(error);
     }

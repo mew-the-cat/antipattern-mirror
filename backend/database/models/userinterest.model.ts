@@ -1,6 +1,6 @@
 import { Model, DataTypes, Optional, Sequelize } from 'sequelize';
 import sequelize from "./sequelize";
-import {Interest} from "./interest.mode";
+import {Interest} from "./interest.model";
 import { User } from './user.model';
 
 import {UserInterestAttributes, UserInterestCreationAttributes} from "../interfaces/userinterest.interface";

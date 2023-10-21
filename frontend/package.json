@@ -16,7 +16,7 @@
     "typescript": "^4.6.4"
   },
   "scripts": {
-    "start": "set NODE_ENV=development&& set REACT_APP_BACKEND=http://localhost:3001&& react-scripts start",
+    "start": "set NODE_ENV=development&& export NODE_ENV=development&& set REACT_APP_BACKEND=http://localhost:3001&& export REACT_APP_BACKEND='http://localhost:3001'&& react-scripts start",
     "build": "set NODE_ENV=production&& set REACT_APP_BACKEND=&& react-scripts build",
     "buildUnix": "export NODE_ENV='production' && export REACT_APP_BACKEND='' && react-scripts build",
     "test": "react-scripts test",

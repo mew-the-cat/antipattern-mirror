@@ -1,12 +1,97 @@
 import React, { useState } from 'react';
 import "../Assets/css/index.css"
 import {Button, Card, Col, Container, Form, Row, Tab, Tabs} from "react-bootstrap";
+import {auth} from "../Interfaces/auth.interface";
 
 // Need:
 // Liste der Parameter zum Anlegen eines Nutzer als Client / Advisor
 
-export function Index() {
+export function Index(props: auth) {
     const [key, setKey] = useState('login');
+
+    const [validated, setValidated] = useState(false);
+
+    const handleLoginSubmit = (event: { currentTarget: any; preventDefault: () => void; stopPropagation: () => void; }) => {
+        const form = event.currentTarget;
+
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.preventDefault();
+
+            const formData = new URLSearchParams({
+                "email": form["email"].value,
+                "password": form["password"].value,
+            });
+
+            fetch(process.env.REACT_APP_BACKEND + "/user/login", {
+                method: "POST",
+                body: formData,
+            })
+                .then((value) => {
+                    if (value.ok) {
+                        return value.json();
+                    }
+                    throw value;
+                })
+                .then((value) => {
+                    console.log("Response:", value);
+
+                    if(props.setAuthenticationToken !== undefined) {
+                        props.setAuthenticationToken(value);
+                    }
+
+                    // Weitere Aktionen basierend auf der Serverantwort
+                })
+                .catch((reason) => {
+                    console.error("Error:", reason);
+                })
+        }
+        setValidated(true);
+    };
+
+
+    const handleRegisterSubmit = (event: { currentTarget: any; preventDefault: () => void; stopPropagation: () => void; }) => {
+        const form = event.currentTarget;
+
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.preventDefault();
+
+            const formData = new URLSearchParams({
+                "firstname": form["firstname"].value,
+                "lastname": form["lastname"].value,
+                "location": form["location"].value,
+                "street": form["street"].value,
+                "zip": form["zip"].value,
+                "email": form["email"].value,
+                "password": form["password"].value,
+                "role": form["role"].value,
+            });
+
+            fetch(process.env.REACT_APP_BACKEND + "/user", {
+                method: "POST",
+                body: formData,
+            })
+                .then((value) => {
+                    if (value.ok) {
+                        return value.json();
+                    }
+                    throw value;
+                })
+                .then((value) => {
+                    console.log("Response:", value);
+                    // Weitere Aktionen basierend auf der Serverantwort
+                })
+                .catch((reason) => {
+                    console.error("Error:", reason);
+                })
+        }
+        setValidated(true);
+    };
 
     return (
         <>
@@ -42,15 +127,15 @@ export function Index() {
                                 onSelect={(k) => k && setKey(k)}
                             >
                                 <Tab eventKey="login" title="Login">
-                                    <Form style={{ marginTop: '20px' }}>
+                                    <Form style={{ marginTop: '20px' }} onSubmit={handleLoginSubmit}>
                                         <Form.Group className="mb-3">
                                             <Form.Label>Email</Form.Label>
-                                            <Form.Control type="email" placeholder="Email eingeben" />
+                                            <Form.Control type="email" name="email" placeholder="Email eingeben" />
                                         </Form.Group>
 
                                         <Form.Group className="mb-3">
                                             <Form.Label>Password</Form.Label>
-                                            <Form.Control type="password" placeholder="Passwort" />
+                                            <Form.Control type="password" name="password" placeholder="Passwort" />
                                         </Form.Group>
 
                                         <Button variant="primary" type="submit">
@@ -59,31 +144,67 @@ export function Index() {
                                     </Form>
                                 </Tab>
                                 <Tab eventKey="register" title="Registrieren">
-                                    <Form style={{ marginTop: '20px' }}>
+                                    <Form style={{ marginTop: '20px' }} onSubmit={handleRegisterSubmit}>
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Name</Form.Label>
-                                            <Form.Control type="text" placeholder="Vollständiger Name" />
+                                            <Form.Label>Firstname</Form.Label>
+                                            <Form.Control type="text" name="firstname" placeholder="" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Lastname</Form.Label>
+                                            <Form.Control type="text" name="lastname" placeholder="" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Location</Form.Label>
+                                            <Form.Control type="text" name="location" placeholder="" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Street</Form.Label>
+                                            <Form.Control type="text" name="street" placeholder="" />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Zip</Form.Label>
+                                            <Form.Control type="text" name="zip" placeholder="" />
                                         </Form.Group>
 
                                         <Form.Group className="mb-3">
                                             <Form.Label>Email</Form.Label>
-                                            <Form.Control type="email" placeholder="Email eingeben" />
+                                            <Form.Control type="email" name="email" placeholder="" />
                                         </Form.Group>
 
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Passwort</Form.Label>
-                                            <Form.Control type="password" placeholder="Password" />
+                                            <Form.Label>Password</Form.Label>
+                                            <Form.Control type="password" name="password" placeholder="" />
                                         </Form.Group>
 
+                                        {/* Hinzugefügte Radiobuttons zur Auswahl zwischen Client und Advisor */}
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Passwort bestätigen</Form.Label>
-                                            <Form.Control type="password" placeholder="Please repeat password" />
+                                            <Form.Label>Role</Form.Label>
+                                            <Form.Check
+                                                type="radio"
+                                                label="Client"
+                                                name="role"
+                                                value="client"
+                                                id="clientRadio"
+                                                defaultChecked
+                                            />
+                                            <Form.Check
+                                                type="radio"
+                                                label="Advisor"
+                                                name="role"
+                                                value="advisor"
+                                                id="advisorRadio"
+                                            />
                                         </Form.Group>
 
                                         <Button variant="primary" type="submit">
                                             Registration
                                         </Button>
                                     </Form>
+
                                 </Tab>
                             </Tabs>
                         </Card.Body>

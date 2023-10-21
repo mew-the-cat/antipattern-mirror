@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 import { AdvisorCard } from '../Components/AdvisorCard';
+import {auth} from "../Interfaces/auth.interface";
 
 // Match Algo:
 // Gucke die Paramter von User an
@@ -17,7 +18,7 @@ const advisors = [
     // Weitere Berater...
 ];
 
-export function Match() {
+export function Match(props: auth) {
     const [currentAdvisorIndex, setCurrentAdvisorIndex] = useState(0);
     const [offset, setOffset] = useState(0);
 

@@ -4,7 +4,10 @@ import crypto from 'crypto';
 import { Mail } from '../../services/mail.service';
 import { Salt } from '../../services/salt.service';
 import {UserAttributes, UserCreationAttributes} from "../interfaces/user.interface";
-import { Interest } from './interest.mode';
+import { Interest } from './interest.model';
+import {Advisor} from "./advisor.model";
+import {Client} from "./client.model";
+import {Message} from "./message.model";
 
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
@@ -28,6 +31,9 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
 
     public static associate() {
         User.belongsToMany(Interest, {through: 'Userinterest', foreignKey: 'user_id'});
+        User.hasMany(Advisor, {foreignKey: 'user_id'});
+        User.hasMany(Client, {foreignKey: 'user_id'});
+        User.hasMany(Message, {foreignKey: 'from_id'});
     }
 
     static hashPassword(password: string) {

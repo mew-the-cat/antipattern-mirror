@@ -8,8 +8,7 @@ export function isLoggedIn(props: auth) {
         props.authenticationToken.tokenType !== undefined &&
         props.authenticationToken.tokenType !== "" &&
         props.authenticationToken.accessToken !== undefined &&
-        props.authenticationToken.accessToken !== "" &&
-        dayjs() < dayjs(props.authenticationToken.expiresAt)
+        props.authenticationToken.accessToken !== ""
     ) {
         return true;
     }
@@ -19,9 +18,7 @@ export function isLoggedIn(props: auth) {
 
 function logout(props: auth) {
     if("setAuthenticationToken" in props && props.setAuthenticationToken !== undefined) {
-        props.setAuthenticationToken({
-            expiresIn: 0
-        });
+        props.setAuthenticationToken(undefined);
     }
 }
 

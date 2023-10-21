@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import "../Assets/css/messaging.css";
+import {auth} from "../Interfaces/auth.interface";
 
 // Need Endpoint für Messages usw.
 
-const Messaging = () => {
+const Messaging = (props: auth) => {
     const [data, setData] = useState({
         count: 0,
         rows: []

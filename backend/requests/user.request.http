@@ -23,8 +23,19 @@ email=max@muster.de&password=A!1bcdef
 
 > {% client.global.set("token", response.body.accessToken) %}
 
+### Login
+POST {{url}}/user/login
+Content-Type: application/x-www-form-urlencoded
+
+email=a@a.de&password=A
+
+> {% client.global.set("token", response.body.accessToken) %}
+
 ### Logout
 POST {{url}}/user/logout
 Authorization: Bearer {{token}}
 
 > {% client.global.set("token", response.body.accessToken) %}
+
+### Get All Users
+GET {{url}}/user

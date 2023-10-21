@@ -1,9 +1,10 @@
-import { Model, DataTypes, Optional, Sequelize } from 'sequelize';
+import {Model, DataTypes, Optional, Sequelize, CHAR} from 'sequelize';
 import sequelize from "./sequelize";
 
 import { User } from './user.model';
 import {AdvisorAttributes, AdvisorCreationAttributes} from "../interfaces/advisor.interface";
 import { Client } from './client.model';
+import {Chat} from "./chat.model";
 
 class Advisor extends Model<AdvisorAttributes, AdvisorCreationAttributes> implements AdvisorAttributes {
     public id!: number;
@@ -13,9 +14,11 @@ class Advisor extends Model<AdvisorAttributes, AdvisorCreationAttributes> implem
     public deleted?: Date;
 
     public static associate() {
-        Advisor.belongsTo(User, {foreignKey: 'user_id',});
-        Advisor.belongsToMany(Client, {through: 'Chat', foreignKey: 'advisor_id'});
-        Advisor.belongsToMany(Client, {through: 'Match', foreignKey: 'advisor_id'});
+        Advisor.belongsTo(User, {foreignKey: 'user_id'});
+        Advisor.belongsToMany(Client, {through: 'Chat', foreignKey: 'advisor_id', otherKey: 'client_id'});
+        Advisor.belongsToMany(Client, {through: 'Match', foreignKey: 'advisor_id', otherKey: 'client_id'});
+
+        Advisor.hasMany(Chat, {foreignKey: 'advisor_id'});
     }
 }
 

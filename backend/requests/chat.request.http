@@ -1,0 +1,20 @@
+### Create Chat
+POST {{url}}/chat/conversation/2/1
+
+### DELETE Chat
+DELETE {{url}}/chat/conversation/2/1
+
+### Get Chat between two Users
+GET {{url}}/chat/conversation/2/1
+
+### Get All Chats of a Client (Client ID)
+GET {{url}}/chat/client/2
+
+### Get All Chats of a Advisor (Advisor ID)
+GET {{url}}/chat/advisor/1
+
+### Write message in Chat (User ID)
+POST {{url}}/chat/message/4/2/
+Content-Type: application/x-www-form-urlencoded
+
+message=IchBinEineNachricht
