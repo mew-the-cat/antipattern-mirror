@@ -9,14 +9,14 @@ import { Chat } from './chat.mode';
 
 class Message extends Model<MessageAttributes, MessageCreationAttributes> implements MessageAttributes {
     public id!: number;
+
+    chat_id!: number;
+    from_id!: number;
+    message!: string;
     
     public created!: Date;
     public updated!: Date;
     public deleted?: Date;
-
-    chat?: Chat;
-    from?: User;
-    message!: string;
 
     public static associate() {
         Message.belongsTo(Chat, {foreignKey: 'chat_id'});
@@ -33,6 +33,10 @@ Message.init(
             allowNull: false,
         },
         chat_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
+        },
+        from_id: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },

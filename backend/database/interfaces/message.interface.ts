@@ -4,8 +4,8 @@ import { User } from "../models/user.model";
 
 export interface MessageAttributes {
     id: number;
-    chat?: Chat;
-    from?: User;
+    chat_id: number;
+    from_id: number;
     message: string;
     created: Date;
     updated: Date;

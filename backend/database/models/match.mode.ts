@@ -17,8 +17,8 @@ class Match extends Model<MatchAttributes, MatchCreationAttributes> implements M
     public updated!: Date;
     public deleted?: Date;
 
-    public client?: Client;
-    public advisor?: Advisor;
+    public client_id!: number;
+    public advisor_id!: number;
 
     public static associate() {
         Match.belongsTo(Client, {foreignKey: 'client_id'});

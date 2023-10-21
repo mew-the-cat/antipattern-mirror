@@ -4,8 +4,8 @@ import { Advisor } from "../models/advisor.model";
 
 export interface MatchAttributes {
     id: number;
-    client?: Client;
-    advisor?: Advisor;
+    client_id: number;
+    advisor_id: number;
     accepted: boolean
     score: number;
     created: Date;

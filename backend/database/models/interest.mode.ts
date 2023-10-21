@@ -2,10 +2,10 @@ import { Model, DataTypes, Optional, Sequelize, BelongsToMany } from 'sequelize'
 import sequelize from "./sequelize";
 
 import { User } from './user.model';
-import {InterrestAttributes, InterrestCreationAttributes} from "../interfaces/interrest.interface";
+import {InterestAttributes, InterestCreationAttributes} from "../interfaces/interest.interface";
 import {Advisor} from "./advisor.model";
 
-class Interest extends Model<InterrestAttributes, InterrestCreationAttributes> implements InterrestAttributes {
+class Interest extends Model<InterestAttributes, InterestCreationAttributes> implements InterestAttributes {
     public id!: number;
     public name!: string;
     

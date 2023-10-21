@@ -5,7 +5,7 @@ import {Interest} from "../models/interest.mode";
 import {Match} from "../models/match.mode";
 import {Message} from "../models/message.mode";
 import {User} from "../models/user.model";
-import {Userinterest} from "../models/userinterest.model";
+import {UserInterest} from "../models/userinterest.model";
 
 export function initializeAssociations() {
     Advisor.associate();
@@ -15,5 +15,5 @@ export function initializeAssociations() {
     Match.associate();
     Message.associate();
     User.associate();
-    Userinterest.associate();
+    UserInterest.associate();
 }

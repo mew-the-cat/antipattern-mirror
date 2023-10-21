@@ -3,8 +3,10 @@ import sequelize from "./sequelize";
 import {Interest} from "./interest.mode";
 import { User } from './user.model';
 
+import {UserInterestAttributes, UserInterestCreationAttributes} from "../interfaces/userinterest.interface";
 
-class Userinterest extends Model<UserinterestAttributes, UserinterestCreationAttributes> implements UserinterestAttributes {
+
+class UserInterest extends Model<UserInterestAttributes, UserInterestCreationAttributes> implements UserInterestAttributes {
     public id!: number;
     public user_id!: number;
     public interest_id!: number;
@@ -13,13 +15,13 @@ class Userinterest extends Model<UserinterestAttributes, UserinterestCreationAtt
     public deleted?: Date;
 
     public static associate() {
-        Userinterest.belongsTo(User, {foreignKey: 'user_id'});
-        Userinterest.belongsTo(Interest, {foreignKey: 'interest_id'})
+        UserInterest.belongsTo(User, {foreignKey: 'user_id'});
+        UserInterest.belongsTo(Interest, {foreignKey: 'interest_id'})
 
     }
 }
 
-Userinterest.init(
+UserInterest.init(
     {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
@@ -59,7 +61,7 @@ Userinterest.init(
     }
 );
 
-export { Userinterest };
+export { UserInterest };
 
 // Bei belongsTo wird der foreignKey in der aufrufenden Tabelle gesucht. => A.belongsTo(B, {foreignKey: "C"}) Dann guckt man für C in A nach.
 // Bei hasOne wird der foreignKey in der zugeordneten Tabelle (Target-Tabelle) gesucht. => A.hasOne(B, {foreignKey: "C"}) Dann guckt man für C in B nach.

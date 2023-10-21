@@ -3,6 +3,7 @@ import sequelize from "./sequelize";
 
 import { User } from './user.model';
 import {AdvisorAttributes, AdvisorCreationAttributes} from "../interfaces/advisor.interface";
+import { Client } from './client.model';
 
 class Advisor extends Model<AdvisorAttributes, AdvisorCreationAttributes> implements AdvisorAttributes {
     public id!: number;
