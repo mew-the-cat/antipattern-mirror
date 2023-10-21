@@ -2,7 +2,6 @@ import express from "express";
 import { Advisor } from "../database/models/advisor.model";
 import sequelize from "../database/models/sequelize";
 import { Match } from "../database/models/match.mode";
-import { Chat } from "../database/models/chat.mode";
 
 export default class MatchController {
   static async getRecommendation(
@@ -21,7 +20,7 @@ export default class MatchController {
         res.status(404).json({ error: "No advisor found" });
       }
 
-      res.json(randomAdvisor);
+      res.status(200).json(randomAdvisor);
     } catch (error) {
       return next(error);
     }
@@ -36,14 +35,14 @@ export default class MatchController {
       const clientId = Number(req.params.clientId);
       const advisorId = Number(req.params.advisorId);
 
-      const newMatch = await Match.create({
+      await Match.create({
         client_id: clientId,
         advisor_id: advisorId,
         score: 0.5,
         accepted: false,
       });
 
-      res.status(201).json(newMatch);
+      res.status(201);
     } catch (error) {
       return next(error);
     }
@@ -67,14 +66,7 @@ export default class MatchController {
 
       await match.save();
 
-      // Create new chat entity
-
-      const newChat = await Chat.create({
-        client_id: match.client_id,
-        advisor_id: match.advisor_id,
-      });
-
-      res.status(201).json(newChat);
+      res.status(200);
     } catch (error) {
       return next(error);
     }
