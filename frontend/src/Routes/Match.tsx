@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 import { AdvisorCard } from '../Components/AdvisorCard';
 import {auth} from "../Interfaces/auth.interface";
+import jwtDecode from "jwt-decode";
 
 // Match Algo:
 // Gucke die Paramter von User an
@@ -21,6 +22,48 @@ const advisors = [
 export function Match(props: auth) {
     const [currentAdvisorIndex, setCurrentAdvisorIndex] = useState(0);
     const [offset, setOffset] = useState(0);
+
+    const [advisorList, setAdvisorList] = useState([]);
+
+    useEffect(() => {
+        //@ts-ignore
+        const stuff = jwtDecode(props.authenticationToken.accessToken);
+
+        //@ts-ignore
+        fetch(process.env.REACT_APP_BACKEND + "/match/" + stuff.client_id, {
+            method: "GET",
+        }).then((value) => {
+            if (value.ok) {
+                return value.json();
+            }
+            throw value;
+        }).then((value) => {
+
+            for (let i = 0; i < value.length; i++) {
+                fetch(process.env.REACT_APP_BACKEND + "/user/" + value[i].id, {
+                    method: "GET",
+                }).then((value) => {
+                    if (value.ok) {
+                        return value.json();
+                    }
+                    throw value;
+                }).then((value) => {
+                    //@ts-ignore
+                    setAdvisorList([...advisorList, value]);
+                    console.log(value);
+                }).catch((reason) => {
+
+                });
+            }
+
+
+
+            console.log(value);
+        }).catch((reason) => {
+
+        });
+
+    }, []);
 
     const handleAccept = (advisor: { name: any; }) => {
         console.log(`Berater ${advisor.name} wurde akzeptiert.`);

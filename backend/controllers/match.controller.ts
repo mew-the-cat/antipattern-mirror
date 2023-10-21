@@ -21,12 +21,12 @@ export default class MatchController {
 
       // get Client info:
       const clientPref = await User.findOne({
-        where: { id: clientId },
         include: [
           {
             model: Client,
             attributes: ["id"],
-            required: true
+            required: true,
+            where: { id: clientId },
           },
           {
             model: Interest,
@@ -92,13 +92,22 @@ export default class MatchController {
             interests: AdvisorData[i].Interests.map((interest: { name: string; }) => interest.name)
         })
       }
+      console.log("data Advisor");
+      console.log(data);
 
+      console.log("data Client");
+      console.log({
+        //@ts-ignore
+        id: clientPref.Clients[0].id,
+        //@ts-ignore
+        interests: clientPref.getDataValue("Interests").map((interest: { name: string; }) => interest.name)
+      });
       // Wieder einkommentieren
       const computedScores = computeScores({
         //@ts-ignore
         id: clientPref.Clients[0].id,
         //@ts-ignore
-        interests: clientPref.Interests
+        interests: clientPref.getDataValue("Interests").map((interest: { name: string; }) => interest.name)
       }, data);
       const sortedScoredAdvisors = computedScores.sort((a, b) => b.score - a.score);
       console.log("sortedScoredAdvisors");
