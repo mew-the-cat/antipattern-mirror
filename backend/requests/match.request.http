@@ -1,0 +1,4 @@
+    /match/:clientId
+
+### Match getRecommendation for Client ID
+GET {{url}}/match/7

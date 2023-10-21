@@ -17,7 +17,7 @@ export default class MatchController {
   ) {
     // TODO: design a proper algorithm to find best matching advisor. Now returna just a random one
     try {
-      const clientId = req.params.clientId;
+      const clientId = parseInt(req.params.clientId);
 
       // get Client info:
       const clientPref = await User.findOne({
@@ -25,7 +25,8 @@ export default class MatchController {
         include: [
           {
             model: Client,
-            attributes: ["id"]
+            attributes: ["id"],
+            required: true
           },
           {
             model: Interest,
@@ -34,8 +35,10 @@ export default class MatchController {
         ],
         attributes: []
       });
+      console.log("clientPref");
+      console.log(clientPref);
 
-      if (clientPref) {
+      if (!clientPref) {
         res.status(404).json({ error: "No client found" });
       }
 
@@ -44,7 +47,8 @@ export default class MatchController {
         include: [
           {
             model: Advisor,
-            attributes: ["id"]
+            attributes: ["id"],
+            required: true
           },
           {
             model: Interest,
@@ -54,6 +58,9 @@ export default class MatchController {
         attributes: []
 
       })
+      console.log("AdvisorData");
+      console.log(AdvisorData);
+
 
       // logic 
       // Compute the scores
@@ -76,11 +83,27 @@ export default class MatchController {
         userScores.sort((a, b) => b.score - a.score);
       }
 
-      // Wieder einkommentieren
-      //const computedScores = computeScores(clientPref, AdvisorData);
-      //const sortedScoredAdvisors = sortByScore(computedScores);
+      const data = [];
+      for (let i = 0; i < AdvisorData.length; i++) {
+        data.push({
+          //@ts-ignore
+            id: AdvisorData[i].Advisors[0].id,
+          //@ts-ignore
+            interests: AdvisorData[i].Interests.map((interest: { name: string; }) => interest.name)
+        })
+      }
 
-      //res.json(sortedScoredAdvisors);
+      // Wieder einkommentieren
+      const computedScores = computeScores({
+        //@ts-ignore
+        id: clientPref.Clients[0].id,
+        //@ts-ignore
+        interests: clientPref.Interests
+      }, data);
+      const sortedScoredAdvisors = computedScores.sort((a, b) => b.score - a.score);
+      console.log("sortedScoredAdvisors");
+      console.log(sortedScoredAdvisors);
+      res.status(200).json(sortedScoredAdvisors);
     } catch (error) {
       return next(error);
     }
