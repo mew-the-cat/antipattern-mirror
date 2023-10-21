@@ -18,10 +18,9 @@ class Message extends Model<MessageAttributes, MessageCreationAttributes> implem
     from?: User;
     message!: string;
 
-    public static associations: {
-        client: BelongsTo<Chat, Client>;
-        advisor: BelongsTo<Chat, Advisor>;
-
+    public static associate() {
+        Message.belongsTo(Chat, {foreignKey: 'chat_id'});
+        Message.belongsTo(User, {foreignKey: 'from_id'});
     }
 }
 
@@ -31,6 +30,10 @@ Message.init(
             type: DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement: true,
+            allowNull: false,
+        },
+        chat_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
         message: {
@@ -60,10 +63,6 @@ Message.init(
         deletedAt: 'deleted',
     }
 );
-
-
-Message.hasOne(Chat);
-Message.hasOne(User);
 
 export { Message };
 

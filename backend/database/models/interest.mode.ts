@@ -3,8 +3,9 @@ import sequelize from "./sequelize";
 
 import { User } from './user.model';
 import {InterrestAttributes, InterrestCreationAttributes} from "../interfaces/interrest.interface";
+import {Advisor} from "./advisor.model";
 
-class Interrest extends Model<InterrestAttributes, InterrestCreationAttributes> implements InterrestAttributes {
+class Interest extends Model<InterrestAttributes, InterrestCreationAttributes> implements InterrestAttributes {
     public id!: number;
     public name!: string;
     
@@ -14,12 +15,12 @@ class Interrest extends Model<InterrestAttributes, InterrestCreationAttributes> 
 
     public users?: User[];
 
-    public static associations: {
-        users: BelongsToMany<Interrest, User>;
+    public static associate() {
+        Interest.belongsToMany(User, {through: 'Userinterest', foreignKey: 'interest_id'});
     }
 }
 
-Interrest.init(
+Interest.init(
     {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
@@ -31,7 +32,6 @@ Interrest.init(
             type: DataTypes.TEXT('tiny'),
             allowNull: false,
         },
-
         created: {
             type: DataTypes.DATE,
             allowNull: false,
@@ -47,7 +47,7 @@ Interrest.init(
     },
     {
         sequelize,
-        modelName: 'Interrest',
+        modelName: 'Interest',
         timestamps: true,
         paranoid: true,
         createdAt: 'created',
@@ -56,26 +56,7 @@ Interrest.init(
     }
 );
 
-
-
-function buildIdSuffixMap(enumObject: Record<string, string>): Record<string, string> {
-    const output: Record<string, string> = {};
-
-    for (const key of Object.keys(enumObject)) {
-        const value = enumObject[key];
-        output[`${value}_id`] = value;
-    }
-
-    return output;
-}
-
-Interrest.addHook('beforeValidate', (interrrest, options) => {
-   
-});
-
-Interrest.belongsToMany(User, {through: 'User_Interrest'});
-
-export { Interrest };
+export { Interest };
 
 // Bei belongsTo wird der foreignKey in der aufrufenden Tabelle gesucht. => A.belongsTo(B, {foreignKey: "C"}) Dann guckt man für C in A nach.
 // Bei hasOne wird der foreignKey in der zugeordneten Tabelle (Target-Tabelle) gesucht. => A.hasOne(B, {foreignKey: "C"}) Dann guckt man für C in B nach.

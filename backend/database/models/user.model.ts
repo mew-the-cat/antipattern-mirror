@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { Mail } from '../../services/mail.service';
 import { Salt } from '../../services/salt.service';
 import {UserAttributes, UserCreationAttributes} from "../interfaces/user.interface";
-import { Interrest } from './interrest.mode';
+import { Interest } from './interest.mode';
 
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
@@ -20,12 +20,11 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     public updated!: Date;
     public deleted?: Date;
 
-    public interrests?: Interrest[];
+    public interests?: Interest[];
 
 
-    // Define associations
-    public static associations: {
-        interrests: BelongsToMany<User, Interrest>;
+    public static associate() {
+        User.belongsToMany(Interest, {through: 'Userinterest', foreignKey: 'user_id'});
     }
 
     static hashPassword(password: string) {
@@ -122,12 +121,5 @@ User.init(
         deletedAt: 'deleted',
     }
 );
-
-// Import models
-
-
-// Define associations
-User.belongsToMany(Interrest, { through: 'User_Interrest'});
-
 
 export { User };

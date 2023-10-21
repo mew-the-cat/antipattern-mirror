@@ -1,54 +1,63 @@
-import { DataTypes, QueryInterface } from 'sequelize';
+import { QueryInterface, DataTypes } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface, Sequelize: any): Promise<void> {
-  await queryInterface.createTable('Chats', {
-    id:{
-      type: Sequelize.INTEGER.UNSIGNED,
-      primaryKey: true,
-    },
-    client_id: {
-      type: Sequelize.INTEGER.UNSIGNED,
-      unique: true,
-      autoIncrement: true,
-      allowNull: false,
-      references: {
-        model: 'Clients',
-        key: 'id',
+module.exports = {
+  up: async (queryInterface: QueryInterface) => {
+    await queryInterface.createTable('Chats', {
+      id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
-    },
-    advisor_id: {
-      type: Sequelize.INTEGER.UNSIGNED,
-      unique: true,
-      allowNull: false,
-      references: {
-        model: 'Advisors',
-        key: 'id',
+      client_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
       },
-    },
-    created: {
-        type: Sequelize.DATE,
+      advisor_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
+      created: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      updated: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      deleted: {
+        type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updated: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-    },
-    deleted: {
-        type: Sequelize.DATE,
-        allowNull: true,
-    },
-  });
+      },
+    });
 
-  await queryInterface.addConstraint('Chats', {
-    type: 'unique',
-    fields: ['client_id', 'advisor_id'],
-    name: 'chats_unique_constraint_client_advisor', // Optional: benenne die Constraint, wenn du möchtest
-  });
+    // Fremdschlüsselbeziehungen definieren
+    await queryInterface.addConstraint('Chats', {
+      fields: ['client_id'],
+      type: 'foreign key',
+      name: 'fk_client_id',
+      references: {
+        table: 'Clients',
+        field: 'id',
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    });
 
-}
+    await queryInterface.addConstraint('Chats', {
+      fields: ['advisor_id'],
+      type: 'foreign key',
+      name: 'fk_advisor_id',
+      references: {
+        table: 'Advisors',
+        field: 'id',
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    });
+  },
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
-  await queryInterface.dropTable('Chats');
-}
+  down: async (queryInterface: QueryInterface) => {
+    await queryInterface.dropTable('Chats');
+  },
+};

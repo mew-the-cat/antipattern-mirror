@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import "../Assets/css/index.css"
 import {Button, Card, Col, Container, Form, Row, Tab, Tabs} from "react-bootstrap";
 
+// Need:
+// Liste der Parameter zum Anlegen eines Nutzer als Client / Advisor
+
 export function Index() {
     const [key, setKey] = useState('login');
 

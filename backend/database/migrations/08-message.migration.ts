@@ -1,47 +1,73 @@
-import { DataTypes, QueryInterface } from 'sequelize';
+import { QueryInterface, DataTypes } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface, Sequelize: any): Promise<void> {
-  await queryInterface.createTable('Messages', {
-    id:{
-      type: Sequelize.INTEGER.UNSIGNED,
-      primaryKey: true,
-    },
-    chat_id: {
-      type: Sequelize.INTEGER.UNSIGNED,
-      unique: true,
-      allowNull: false,
-      references: {
-        model: 'Chats',
-        key: 'id',
-      },
-    },
-    from: {
-      type: Sequelize.INTEGER.UNSIGNED,
-      unique: true,
-      allowNull: false,
-      references: {
-        model: 'Users',
-        key: 'id',
-      },
-    },
-    created: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updated: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-    },
-    deleted: {
-        type: Sequelize.DATE,
-        allowNull: true,
-    },
-  });
+module.exports = {
+    up: async (queryInterface: QueryInterface) => {
+        // Erstelle die Messages Tabelle
+        await queryInterface.createTable('Messages', {
+            id: {
+                type: DataTypes.INTEGER.UNSIGNED,
+                primaryKey: true,
+                autoIncrement: true,
+                allowNull: false,
+            },
+            chat_id: {
+                type: DataTypes.INTEGER.UNSIGNED,
+                allowNull: false,
+            },
+            from_id: {
+                type: DataTypes.INTEGER.UNSIGNED,
+                allowNull: false,
+            },
+            message: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            created: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            updated: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            deleted: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+        });
 
-}
+        // Füge die Fremdschlüssel-Constraints hinzu
+        await queryInterface.addConstraint('Messages', {
+            fields: ['chat_id'],
+            type: 'foreign key',
+            name: 'fk_chat_id',
+            references: {
+                table: 'Chats',
+                field: 'id',
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+        });
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
-  await queryInterface.dropTable('Messages');
-}
+        await queryInterface.addConstraint('Messages', {
+            fields: ['from_id'],
+            type: 'foreign key',
+            name: 'fk_from_id',
+            references: {
+                table: 'Users',
+                field: 'id',
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+        });
+    },
+
+    down: async (queryInterface: QueryInterface) => {
+        // Entferne zuerst die Fremdschlüssel-Constraints
+        await queryInterface.removeConstraint('Messages', 'fk_chat_id');
+        await queryInterface.removeConstraint('Messages', 'fk_from_id');
+
+        // Dann lösche die Messages Tabelle
+        await queryInterface.dropTable('Messages');
+    },
+};

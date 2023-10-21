@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 import { AdvisorCard } from '../Components/AdvisorCard';
 
+// Match Algo:
+// Gucke die Paramter von User an
+// gucke die Parameter von Advisor an
+// Berechne prozentuale Übereinstimmung der Werte
+// Gib Liste zurück, sortiert nach prozentualer Übereinstimmung (höchste zuerst)
+
+// Anbindung an Google LM
+// Einfach nur einen Endpoint wo man was hinschicken kann und was zurück bekommt
+
 const advisors = [
     { id: 1, name: 'Berater 1', image: 'path_to_image1.jpg', description: 'Berater 1 Beschreibung' },
     { id: 2, name: 'Berater 2', image: 'path_to_image2.jpg', description: 'Berater 2 Beschreibung' },

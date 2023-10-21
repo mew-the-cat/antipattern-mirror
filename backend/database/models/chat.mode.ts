@@ -16,16 +16,25 @@ class Chat extends Model<ChatAttributes, ChatCreationAttributes> implements Chat
     public client?: Client;
     public advisor?: Advisor;
 
-    public static associations: {
-        client: BelongsTo<Chat, Client>;
-        advisor: BelongsTo<Chat, Advisor>;
-
+    public static associate() {
+        Chat.belongsTo(Client, {foreignKey: 'client_id'});
+        Chat.belongsTo(Advisor, {foreignKey: 'advisor_id'});
     }
 }
 
 Chat.init(
     {
         id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false,
+        },
+        client_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
+        },
+        advisor_id: {
             type: DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement: true,
@@ -46,7 +55,7 @@ Chat.init(
     },
     {
         sequelize,
-        modelName: 'Match',
+        modelName: 'Chat',
         timestamps: true,
         paranoid: true,
         createdAt: 'created',
@@ -56,8 +65,7 @@ Chat.init(
 );
 
 
-Chat.hasOne(Client);
-Chat.hasOne(Advisor);
+
 
 export { Chat };
 

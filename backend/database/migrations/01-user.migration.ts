@@ -1,64 +1,63 @@
-import { QueryInterface } from "sequelize";
+import { QueryInterface, DataTypes } from 'sequelize';
 
-/** @type {import("sequelize-cli").Migration} */
 module.exports = {
-    up: async (queryInterface: QueryInterface, Sequelize: any) => {
+    up: async (queryInterface: QueryInterface) => {
+        // Erstelle die User Tabelle
         await queryInterface.createTable('Users', {
             id: {
-                type: Sequelize.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER.UNSIGNED,
                 primaryKey: true,
                 autoIncrement: true,
                 allowNull: false,
             },
             name: {
-                type: Sequelize.TEXT('tiny'),
+                type: DataTypes.TEXT('tiny'),
                 allowNull: false,
             },
             email: {
-                type: Sequelize.STRING(100),
+                type: DataTypes.STRING(100),
                 allowNull: false,
+                unique: true,
             },
             password: {
-                type: Sequelize.BLOB('tiny'),
+                type: DataTypes.BLOB,
                 allowNull: false,
             },
             salt: {
-                type: Sequelize.BLOB('tiny'),
+                type: DataTypes.BLOB,
                 allowNull: false,
             },
             confirmation: {
-                type: Sequelize.BOOLEAN,
-                allowNull: false,
+                type: DataTypes.BOOLEAN,
                 defaultValue: false,
+                allowNull: false,
             },
             signup_verified: {
-                type: Sequelize.BOOLEAN,
-                allowNull: false,
+                type: DataTypes.BOOLEAN,
                 defaultValue: false,
+                allowNull: false,
             },
             premium_end: {
-                type: Sequelize.DATE,
+                type: DataTypes.DATE,
                 allowNull: true,
             },
             created: {
+                type: DataTypes.DATE,
                 allowNull: false,
-                type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
             updated: {
+                type: DataTypes.DATE,
                 allowNull: false,
-                type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
             },
             deleted: {
+                type: DataTypes.DATE,
                 allowNull: true,
-                type: Sequelize.DATE,
             },
         });
-
     },
 
     down: async (queryInterface: QueryInterface) => {
+        // Lösche die Users Tabelle
         await queryInterface.dropTable('Users');
     },
 };

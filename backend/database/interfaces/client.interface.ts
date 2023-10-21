@@ -4,9 +4,7 @@ import {Optional} from "sequelize";
 
 export interface ClientAttributes {
     id: number;
-    client_type: ClientType;
     user_id: number;
-    permission: Permission;
     created: Date;
     updated: Date;
     deleted?: Date;
