@@ -2,6 +2,7 @@ import express from "express";
 import { Advisor } from "../database/models/advisor.model";
 import sequelize from "../database/models/sequelize";
 import { Match } from "../database/models/match.mode";
+import { Chat } from "../database/models/chat.mode";
 
 export default class MatchController {
   static async getRecommendation(
@@ -54,8 +55,8 @@ export default class MatchController {
     next: express.NextFunction
   ) {
     try {
+      // Update match entity
       const matchId = req.params.matchId;
-
       const match = await Match.findByPk(matchId);
 
       if (!match) {
@@ -66,9 +67,14 @@ export default class MatchController {
 
       await match.save();
 
-      // TODO: create also chat entries
+      // Create new chat entity
 
-      res.status(200).json(match);
+      const newChat = await Chat.create({
+        client_id: match.client_id,
+        advisor_id: match.advisor_id,
+      });
+
+      res.status(201).json(newChat);
     } catch (error) {
       return next(error);
     }
