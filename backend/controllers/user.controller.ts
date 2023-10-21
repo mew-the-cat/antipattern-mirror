@@ -52,7 +52,8 @@ export default class UserController {
         email: email,
         salt: salt,
         password: hashPassword,
-        confirmation: confirmation
+        confirmation: confirmation,
+        signup_verified: true,
       }, {transaction: t}).then(async (user) => {
         const env = process.env.NODE_ENV || 'development';
         if(env === "development") {
@@ -128,7 +129,7 @@ export default class UserController {
   static async verify(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
       const {code} = req.body;
-
+      console.log(code);
       const user = await User.findOne({
         where: {
           confirmation: true,
