@@ -3,16 +3,13 @@ import MatchController from "../../controllers/match.controller";
 
 const routes = Router();
 
-// Stage 1. Recommend a tailored advisor profile to the calling client
-routes.get("/match", MatchController.getRecommendation);
+// Stage 1. Recommend a tailored advisor profile to the calling cliematnt
+routes.get("/match/:clientId", MatchController.getRecommendation);
 
-// Stage 2. The client wants to match the advisor (with the given ID)
-routes.post("/match/byclient/:advisorId", MatchController.initiateMatch);
+// Stage 2. The client (identified by the client ID) want to initiate the match (with the advisor of the given advisor ID)
+routes.post("/match/:clientId/:advisorId", MatchController.initiateMatch);
 
-// Stage 3A. The advisor wants to accepts the client (with the given ID)
-routes.post("/match/byadvisor/:matchId/accept", MatchController.acceptMatch);
-
-// Stage 3B. The advisor wants to accepts the client (with the given ID)
-routes.post("/match/byadvisor/:matchId/decline", MatchController.declineMatch);
+// Stage 3. The advisor wants to accepts the client (using the match ID)
+routes.post("/match/accept/:matchId", MatchController.acceptMatch);
 
 export default routes;

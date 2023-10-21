@@ -1,4 +1,7 @@
 import express from "express";
+import { Advisor } from "../database/models/advisor.model";
+import sequelize from "../database/models/sequelize";
+import { Match } from "../database/models/match.mode";
 
 export default class MatchController {
   static async getRecommendation(
@@ -6,8 +9,18 @@ export default class MatchController {
     res: express.Response,
     next: express.NextFunction
   ) {
+    // TODO: design a proper algorithm to find best matching advisor. Now returna just a random one
     try {
-      // TODO
+      const clientId = req.params.clientId;
+      const randomAdvisor = await Advisor.findOne({
+        order: sequelize.random(),
+      });
+
+      if (randomAdvisor) {
+        res.status(404).json({ error: "No advisor found" });
+      }
+
+      res.json(randomAdvisor);
     } catch (error) {
       return next(error);
     }
@@ -19,8 +32,17 @@ export default class MatchController {
     next: express.NextFunction
   ) {
     try {
-      const advisorId = req.params.advisorId;
-      // TODO
+      const clientId = Number(req.params.clientId);
+      const advisorId = Number(req.params.advisorId);
+
+      const newMatch = await Match.create({
+        client_id: clientId,
+        advisor_id: advisorId,
+        score: 0.5,
+        accepted: false,
+      });
+
+      res.status(201).json(newMatch);
     } catch (error) {
       return next(error);
     }
@@ -33,21 +55,20 @@ export default class MatchController {
   ) {
     try {
       const matchId = req.params.matchId;
-      // TODO
-    } catch (error) {
-      return next(error);
-    }
-  }
 
-  static async declineMatch(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
-    try {
-      const id = req.params.id;
-      const matchId = req.params.matchId;
-      // TODO
+      const match = await Match.findByPk(matchId);
+
+      if (!match) {
+        return res.status(404).json({ error: "Match not found" });
+      }
+
+      match.accepted = true;
+
+      await match.save();
+
+      // TODO: create also chat entries
+
+      res.status(200).json(match);
     } catch (error) {
       return next(error);
     }
