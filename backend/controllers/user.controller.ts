@@ -193,9 +193,12 @@ console.log("A");
         ).digest('hex');
         console.log("B");
         const payload = {
-          id: saltedId,
-          name: user.name,
-          expiresAt: dayjs().add(12, 'h')
+          id: user.id,
+          email: user.email,
+          //@ts-ignore
+          client_id: user.client_id,
+          //@ts-ignore
+          advisor_id: user.advisor_id,
         }
         console.log("C");
         jwt.sign(payload, Salt.secret, {}, (err, token) => {

@@ -33,13 +33,11 @@ passport.use(
                     include: [
                         {
                             model: Client,
-                            as: 'client',
                             required: false,
                             attributes: ['id']
                         },
                         {
                             model: Advisor,
-                            as: 'advisor',
                             required: false,
                             attributes: ['id']
                         }
@@ -51,15 +49,15 @@ passport.use(
                 if(!user) {
                     return done(undefined, false, {message: "User not found"});
                 }
-                console.log("cc");
+                console.log(user);
                 if(User.validatePassword(password, user)) {
                     return done(undefined, {
                         id: user.id,
                         email: user.email,
                         //@ts-ignore
-                        client_id: user.client?.id,
+                        client_id: user.Clients[0]?.id,
                         //@ts-ignore
-                        advisor_id: user.advisor?.id,
+                        advisor_id: user.Advisors[0]?.id,
                     }, {message: "Logged in successfully"});
                 }
                 console.log("dd");

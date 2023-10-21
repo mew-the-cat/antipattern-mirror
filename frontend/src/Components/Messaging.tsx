@@ -1,19 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import "../Assets/css/messaging.css";
 import {auth} from "../Interfaces/auth.interface";
 import jwtDecode from "jwt-decode";
+import {MessageList} from "./MessageList";
+import dayjs from "dayjs";
+import {MessageIn} from "./MessageIn";
+import {MessageOut} from "./MessageOut";
 
 // Need Endpoint für Messages usw.
 
 const Messaging = (props: auth) => {
-    const [data, setData] = useState({
-        count: 0,
-        rows: []
-    });
+    const [data, setData] = useState([]);
+
+    const [list, setList] = useState([]);
 
     const [loading, setLoading] = useState(true);
 
     const [error, setError] = useState(null);
+
+    const [messages, setMessages] = useState([]);
 
     const fetchOptions = {}
 
@@ -21,11 +26,44 @@ const Messaging = (props: auth) => {
     if (props.authenticationToken !== undefined) {
         if (props.authenticationToken.accessToken != null) {
             //@ts-ignore
-            id = jwtDecode(props.authenticationToken.accessToken).client_id;
+            client_id = jwtDecode(props.authenticationToken.accessToken).client_id;
+            console.log("props.authenticationToken.accessToken");
+            console.log(props.authenticationToken.accessToken);
+            console.log(jwtDecode(props.authenticationToken.accessToken));
         }
     }
 
+    useEffect(() => {
+        console.log("Blob");
+        console.log(messages);
+    }, [messages]);
 
+    useEffect(() => {
+        const list = [];
+
+        // @ts-ignore
+        for (let i = 0; i < data.length; i++) {
+
+            list.push({
+                // @ts-ignore
+                firstname: data[i].Advisor.User.firstname,
+                // @ts-ignore
+                lastname: data[i].Advisor.User.lastname,
+                date: dayjs().format("DD.MM.YYYY"),
+                image: "https://thispersondoesnotexist.com/",
+                message: "",
+                // @ts-ignore
+                client_id: data[i].Client.id,
+                // @ts-ignore
+                advisorId: data[i].Advisor.id
+            })
+        }
+
+        // @ts-ignore
+        setList(list);
+    }, [data])
+
+useEffect(() => {
     fetch(process.env.REACT_APP_BACKEND + "/chat/client/" + client_id, fetchOptions)
         .then((value) => {
             if(value.ok) {
@@ -35,14 +73,25 @@ const Messaging = (props: auth) => {
         })
         .then((value) => {
             setData(value);
+
+
+
+
+            console.log(value);
         }).catch((reason) => {
-            setError(reason);
-        }).finally(() => {
-            setLoading(false);
-        })
+        setError(reason);
+    }).finally(() => {
+        setLoading(false);
+    })
+}, []);
+
+
 
     const sendMessage = () => {
-        fetch(process.env.REACT_APP_BACKEND + "", fetchOptions)
+        fetch(process.env.REACT_APP_BACKEND + "/chat/message/" + "/", {
+            method: "POST",
+
+        })
             .then((value) => {
                 if(value.ok) {
                     return value.json();
@@ -58,6 +107,12 @@ const Messaging = (props: auth) => {
             })
     }
 
+    if(loading) {
+        return  (
+            <p>Loading...</p>
+        );
+    }
+
     return (
         <div className="messaging mt-3">
             <div className="inbox_msg">
@@ -68,6 +123,27 @@ const Messaging = (props: auth) => {
                         </div>
                     </div>
                     <div className="inbox_chat">
+                        {list.map((item, index) => {
+
+                            return (
+                                <MessageList
+                                    // @ts-ignore
+                                    firstname={item.firstname}
+                                    // @ts-ignore
+                                    lastname={item.lastname}
+                                    // @ts-ignore
+                                    date={item.date}// @ts-ignore
+                                    image={item.image}
+                                    // @ts-ignore
+                                    message={item.message}
+                                    // @ts-ignore
+                                    clientId={item.client_id}
+                                    // @ts-ignore
+                                    advisorId={item.advisorId}
+                                    setMessages={setMessages}
+                                />
+                            )
+                        })}
 
 
 
@@ -77,7 +153,35 @@ const Messaging = (props: auth) => {
                     <div className="msg_history">
 
 
+                        {
+                            messages.map((item, index) => {
+                                // @ts-ignore
+                                const message = item.message;
 
+                                const test = true;
+
+                                if(test) {
+                                    test != test;
+                                    return (
+                                        <MessageIn
+                                            image={'https://thispersondoesnotexist.com/'}
+                                            message={message}
+                                            time={''}
+                                            date={''}
+                                        />
+                                    )
+                                } else {
+                                    test != test;
+                                    return (
+                                        <MessageOut
+                                            message={message}
+                                            time={''}
+                                            date={''}
+                                        />
+                                    )
+                                }
+                            })
+                        }
 
                     </div>
                     <div className="type_msg">

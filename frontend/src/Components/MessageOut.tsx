@@ -1,6 +1,10 @@
 import React from "react";
-
-export function MessageOut(message: string, time: string, date: string) {
+interface MessageOutProps {
+    message: string;
+    time: string;
+    date: string;
+}
+export function MessageOut({message, time, date}: MessageOutProps) {
     return (
         <div className="outgoing_msg">
             <div className="sent_msg">

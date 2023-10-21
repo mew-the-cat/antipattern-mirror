@@ -2,6 +2,8 @@ import express from "express";
 import { Chat } from "../database/models/chat.model";
 import {Message} from "../database/models/message.model";
 import {User} from "../database/models/user.model";
+import {Client} from "../database/models/client.model";
+import {Advisor} from "../database/models/advisor.model";
 
 export default class ChatController {
   static async create(
@@ -115,6 +117,38 @@ export default class ChatController {
           client_id: clientId,
         },
         include: [
+          {
+            model: Advisor,
+            attributes: [
+              'id',
+              'user_id',
+            ],
+            include: [
+              {
+                model: User,
+                attributes: [
+                  'firstname',
+                  'lastname',
+                ]
+              }
+            ]
+          },
+          {
+            model: Client,
+            attributes: [
+                'id',
+                'user_id',
+            ],
+            include: [
+                {
+                    model: User,
+                    attributes: [
+                        'firstname',
+                        'lastname',
+                    ]
+                }
+              ]
+          },
           {
             model: Message,
             attributes: ["message"],
