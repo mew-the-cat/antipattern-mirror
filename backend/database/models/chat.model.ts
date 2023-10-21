@@ -15,6 +15,7 @@ import {
 } from "../interfaces/chat.interface";
 import { Client } from "./client.model";
 import { Advisor } from "./advisor.model";
+import {Message} from "./message.model";
 
 class Chat
   extends Model<ChatAttributes, ChatCreationAttributes>
@@ -30,8 +31,9 @@ class Chat
   public advisor?: Advisor;
 
   public static associate() {
-    Chat.belongsTo(Client, { foreignKey: "client_id" });
-    Chat.belongsTo(Advisor, { foreignKey: "advisor_id" });
+    Chat.belongsTo(Client, { foreignKey: "client_id"});
+    Chat.belongsTo(Advisor, { foreignKey: "advisor_id"});
+    Chat.hasMany(Message, { foreignKey: "chat_id"});
   }
 }
 

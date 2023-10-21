@@ -1,5 +1,5 @@
 import express from "express";
-import { Message } from "../database/models/message.mode";
+import { Message } from "../database/models/message.model";
 
 export default class MessageController {
   static async create(

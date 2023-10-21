@@ -1,5 +1,5 @@
 import {Optional} from "sequelize";
-import { Chat } from "../models/chat.mode";
+import { Chat } from "../models/chat.model";
 import { User } from "../models/user.model";
 
 export interface MessageAttributes {

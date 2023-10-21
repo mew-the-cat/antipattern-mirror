@@ -2,29 +2,31 @@ import { Model, DataTypes, Optional, Sequelize, BelongsToMany, BelongsTo } from 
 import sequelize from "./sequelize";
 
 import { User } from './user.model';
-import {MessageAttributes, MessageCreationAttributes} from "../interfaces/message.interface";
+import {MatchAttributes, MatchCreationAttributes} from "../interfaces/match.interface";
 import { Client } from './client.model';
 import { Advisor } from './advisor.model';
-import { Chat } from './chat.mode';
+import {Interest} from "./interest.model";
 
-class Message extends Model<MessageAttributes, MessageCreationAttributes> implements MessageAttributes {
+class Match extends Model<MatchAttributes, MatchCreationAttributes> implements MatchAttributes {
     public id!: number;
-
-    chat_id!: number;
-    from_id!: number;
-    message!: string;
+    
+    public score!: number;
+    public accepted!: boolean;
     
     public created!: Date;
     public updated!: Date;
     public deleted?: Date;
 
+    public client_id!: number;
+    public advisor_id!: number;
+
     public static associate() {
-        Message.belongsTo(Chat, {foreignKey: 'chat_id'});
-        Message.belongsTo(User, {foreignKey: 'from_id'});
+        Match.belongsTo(Client, {foreignKey: 'client_id'});
+        Match.belongsTo(Advisor, {foreignKey: 'advisor_id'});
     }
 }
 
-Message.init(
+Match.init(
     {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
@@ -32,17 +34,22 @@ Message.init(
             autoIncrement: true,
             allowNull: false,
         },
-        chat_id: {
+        client_id: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
-        from_id: {
+        advisor_id: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
-        message: {
-            type: DataTypes.STRING,
+        score: {
+            type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
+        },
+        accepted: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
         },
         created: {
             type: DataTypes.DATE,
@@ -59,7 +66,7 @@ Message.init(
     },
     {
         sequelize,
-        modelName: 'Message',
+        modelName: 'Match',
         timestamps: true,
         paranoid: true,
         createdAt: 'created',
@@ -68,7 +75,14 @@ Message.init(
     }
 );
 
-export { Message };
+
+// Match.hasOne(Client); -> Client hat match_id als foreignKey
+// Match.hasOne(Advisor); -> Advisor hat match_id als foreignKey
+// Ein Client kann mehrere Matches mit verschiedenen Advisors haben.
+// Ein Advisor kann mehrere Matches mit verschiedenen Clients haben.
+// n:m -> Bonustabelle
+
+export { Match };
 
 // Bei belongsTo wird der foreignKey in der aufrufenden Tabelle gesucht. => A.belongsTo(B, {foreignKey: "C"}) Dann guckt man für C in A nach.
 // Bei hasOne wird der foreignKey in der zugeordneten Tabelle (Target-Tabelle) gesucht. => A.hasOne(B, {foreignKey: "C"}) Dann guckt man für C in B nach.

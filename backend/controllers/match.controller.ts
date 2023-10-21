@@ -1,7 +1,7 @@
 import express from "express";
 import { Advisor } from "../database/models/advisor.model";
 import sequelize from "../database/models/sequelize";
-import { Match } from "../database/models/match.mode";
+import { Match } from "../database/models/match.model";
 
 export default class MatchController {
   static async getRecommendation(

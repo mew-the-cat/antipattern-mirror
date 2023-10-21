@@ -6,6 +6,7 @@ import { ClientType } from '../enums/clienttype.enum';
 import { Permission } from '../enums/permission.enum';
 import {ClientAttributes, ClientCreationAttributes} from "../interfaces/client.interface";
 import {Advisor} from "./advisor.model";
+import {Chat} from "./chat.model";
 
 class Client extends Model<ClientAttributes, ClientCreationAttributes> implements ClientAttributes {
     public id!: number;
@@ -17,8 +18,9 @@ class Client extends Model<ClientAttributes, ClientCreationAttributes> implement
 
     public static associate() {
         Client.belongsTo(User, {foreignKey: 'user_id',});
-        Client.belongsToMany(Advisor, {through: 'Chat', foreignKey: 'client_id'});
-        Client.belongsToMany(Advisor, {through: 'Match', foreignKey: 'client_id'});
+        Client.belongsToMany(Advisor, {through: 'Chat', foreignKey: 'client_id', otherKey: 'advisor_id'});
+        Client.belongsToMany(Advisor, {through: 'Match', foreignKey: 'client_id', otherKey: 'advisor_id'});
+        Client.hasMany(Chat, {foreignKey: 'client_id'});
     }
 }
 
