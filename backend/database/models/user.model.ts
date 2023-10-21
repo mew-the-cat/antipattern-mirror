@@ -9,13 +9,16 @@ import { Interest } from './interest.mode';
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
     public id!: number;
-    public name!: string;
+    public firstname!: string;
+    public lastname!: string;
+    public zip!: string;
+    public location!: string;
+    public street!: string;
     public email!: string;
     public password!: Buffer;
     public salt!: Buffer;
     public confirmation!: boolean;
     public signup_verified!: boolean;
-    public premium_end?: Date;
     public created!: Date;
     public updated!: Date;
     public deleted?: Date;
@@ -68,7 +71,23 @@ User.init(
             autoIncrement: true,
             allowNull: false,
         },
-        name: {
+        firstname: {
+            type: DataTypes.TEXT('tiny'),
+            allowNull: false,
+        },
+        lastname: {
+            type: DataTypes.TEXT('tiny'),
+            allowNull: false,
+        },
+        street: {
+            type: DataTypes.TEXT('tiny'),
+            allowNull: false,
+        },
+        zip: {
+            type: DataTypes.TEXT('tiny'),
+            allowNull: false,
+        },
+        location: {
             type: DataTypes.TEXT('tiny'),
             allowNull: false,
         },
@@ -93,10 +112,6 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false,
-        },
-        premium_end: {
-            type: DataTypes.DATE,
-            allowNull: true,
         },
         created: {
             type: DataTypes.DATE,

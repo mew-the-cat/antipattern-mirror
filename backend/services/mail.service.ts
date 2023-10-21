@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 export class Mail {
     static send(to: string | undefined, subject: string | undefined, text: string | undefined, html: string | undefined): Promise<SMTPTransport.SentMessageInfo> {
         return transporter.sendMail({
-            from: '"Fred Foo 👻" <' + config.username + '>',
+            from: 'Test',
             to: to,
             subject: subject,
             text: text,
@@ -34,7 +34,7 @@ export class Mail {
                 <div style="padding: 15px">
                     <h1>Verifizierung deines Accounts auf _______________</h1>
                     <p style="font-size: large">
-                        Hey ${user.name}!<br /> <br />
+                        Hey ${user.firstname}!<br /> <br />
             
                         Wir sind froh, dass du dich bei uns registriert hast und ein Teil von _________ werden willst! Bevor du dich jedoch ins getümmel stürzen kannst, musst du dein Konto verifizieren.<br /> <br />
                 
@@ -53,7 +53,7 @@ export class Mail {
         return `
 Verifizierung deines Accounts auf _______________
 
-Hey ${user.name}!
+Hey ${user.firstname}!
 
 Wir sind froh, dass du dich bei uns registriert hast und ein Teil von _________ werden willst! Bevor du dich jedoch ins getümmel stürzen kannst, musst du dein Konto verifizieren.
 
@@ -76,7 +76,7 @@ ________________________
                 <div style="padding: 15px">
                     <h1>Zurücksetzen deines Passworts auf _______________</h1>
                     <p style="font-size: large">
-                        Hallo ${user.name},<br /><br />
+                        Hallo ${user.firstname},<br /><br />
     
                         wir haben bemerkt, dass du dein Passwort für deinen _________ Account vergessen hast. Keine Sorge, wir haben das im Griff und helfen dir gerne weiter!<br /><br />
                         
@@ -100,7 +100,7 @@ ________________________
         return `
 Zurücksetzen deines Passworts auf _______________
 
-Hallo ${user.name},
+Hallo ${user.firstname},
 
 wir haben bemerkt, dass du dein Passwort für deinen _________ Account vergessen hast. Keine Sorge, wir haben das im Griff und helfen dir gerne weiter!
 
@@ -128,7 +128,7 @@ ____________
                 <div style="padding: 15px">
                     <h1>Löschen deines Accounts auf _______________</h1>
                     <p style="font-size: large">
-                        Hey ${user.name}, <br /><br />
+                        Hey ${user.firstname}, <br /><br />
             
                         wir haben deine Nachricht erhalten und es tut uns wirklich leid zu hören, dass du deinen Account bei uns löschen möchtest. Du hast sicher deine Gründe! Dennoch sind wir traurig, zumindest deinen Account zu verlieren und hoffen, dich dennoch als Kunden behalten zu können. <br /><br />
                         
@@ -148,7 +148,7 @@ ____________
         return `
 Löschen deines Accounts auf _______________
 
-Hey ${user.name},
+Hey ${user.firstname},
 
 wir haben deine Nachricht erhalten und es tut uns wirklich leid zu hören, dass du deinen Account bei uns löschen möchtest. Du hast sicher deine Gründe! Dennoch sind wir traurig, zumindest deinen Account zu verlieren und hoffen, dich dennoch als Kunden behalten zu können.
 

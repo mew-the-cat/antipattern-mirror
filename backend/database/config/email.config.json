@@ -4,7 +4,7 @@
             "host": "smtp.ethereal.email",
             "port": "587"
         },
-        "user": "augustine.will16@ethereal.email",
-        "pass": "PUtcyAFXvkefwkeUhK"
+        "username": "augustine.will16@ethereal.email",
+        "password": "PUtcyAFXvkefwkeUhK"
     }
 }

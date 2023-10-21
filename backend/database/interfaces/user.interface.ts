@@ -2,13 +2,16 @@ import {Optional} from "sequelize";
 
 export interface UserAttributes {
     id: number;
-    name: string;
+    firstname: string;
+    lastname: string;
+    street: string;
+    zip: string;
+    location: string;
     email: string;
     password: Buffer;
     salt: Buffer;
     confirmation: boolean;
     signup_verified: boolean;
-    premium_end?: Date;
     created: Date;
     updated: Date;
     deleted?: Date;

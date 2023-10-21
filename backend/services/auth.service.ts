@@ -18,7 +18,9 @@ passport.use(
             passwordField: "password"
         },
         async (email, password, done) => {
+        console.log("login");
             try {
+                console.log("aa");
                 const user = await User.findOne({
                     where: {
                         confirmation: true,
@@ -26,16 +28,18 @@ passport.use(
                         email
                     },
                 });
-
+                console.log("bb");
                 if(!user) {
                     return done(undefined, false, {message: "User not found"});
                 }
-
+                console.log("cc");
                 if(User.validatePassword(password, user)) {
                     return done(undefined, user, {message: "Logged in successfully"});
                 }
+                console.log("dd");
                 return done(undefined, false, {message: "Wrong password"});
             } catch (error) {
+                console.log("ee");
                 return done(error);
             }
         }
@@ -83,3 +87,5 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user : Express.User, done) => {
     done(null, user);
 })
+
+export default passport;

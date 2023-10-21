@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import router from './routes';
 import cors from "cors";
 import {initializeAssociations} from "./database/associations";
+import passport from "passport";
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -40,6 +41,7 @@ app.get('/', (req, res) => {
 });
 
 //app.use(limiter);
+app.use(passport.initialize());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(router);

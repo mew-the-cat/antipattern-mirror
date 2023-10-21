@@ -1,9 +1,9 @@
 {
     "development": {
-      "username": "",
-      "password": "",
-      "database": "",
-      "host": "127.0.0.1",
+      "username": "antipattern-mirror",
+      "password": "antipattern-mirror",
+      "database": "antipattern-mirror",
+      "host": "localhost",
       "dialect": "mariadb"
     }
   }

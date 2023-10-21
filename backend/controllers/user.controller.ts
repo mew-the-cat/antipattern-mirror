@@ -39,8 +39,13 @@ export default class UserController {
       const [salt, hashPassword] = User.hashPassword(password.toString('hex'));
 
       const t = await sequelize.transaction();
-/*
+
       User.create({
+        firstname: firstname,
+        lastname: lastname,
+        location: location,
+        street: street,
+        zip: zip,
         email: email,
         salt: salt,
         password: hashPassword,
@@ -60,7 +65,7 @@ export default class UserController {
           User.sendVerificationMail(user, {transaction: t});
 
           return res.status(200).json({
-            name: name,
+            firstname: firstname,
             email: email,
             verification_code: verificationCode
           });
@@ -71,54 +76,14 @@ export default class UserController {
         User.sendVerificationMail(user, {transaction: t});
 
         return res.status(200).json({
-          name: name,
+          firstname: firstname,
           email: email
         });
       }).catch(_err => {
         t.rollback();
         console.warn(new Error(req.method + "-" + req.url + ": Create User entry failed! Error: "), _err);
         return res.status(400).json(_err)
-      });*/
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  static async createAdvisor(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
-    try {
-      const { user } = req.body;
-      // TODO
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  static async updateById(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
-    try {
-      const { user } = req.body;
-      const id = req.params.id;
-      // TODO
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  static async deleteById(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
-    try {
-      const id = req.params.id;
-      // TODO
+      });
     } catch (error) {
       return next(error);
     }
@@ -189,24 +154,24 @@ export default class UserController {
   static async login(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
       const user = req.user as any;
-
+console.log("A");
       if(user) {
         const saltedId = crypto.createHash('md5').update(
             user.id + "" + Salt.userId
         ).digest('hex');
-
+        console.log("B");
         const payload = {
           id: saltedId,
           name: user.name,
           expiresAt: dayjs().add(12, 'h')
         }
-
+        console.log("C");
         jwt.sign(payload, Salt.secret, {}, (err, token) => {
           if (err) {
             console.warn(new Error(req.method + "-" + req.url + ": Login User entry failed! JWT signing failed! Errors: "), err);
             return next("Error in jwt signing!");
           }
-
+          console.log("D");
           console.info(req.method + "-" + req.url + ": Login User with ID " + user.id + " successful!" );
           return res.status(200).json({
             accessToken: `${token}`,

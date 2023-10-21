@@ -10,7 +10,23 @@ module.exports = {
                 autoIncrement: true,
                 allowNull: false,
             },
-            name: {
+            firstname: {
+                type: DataTypes.TEXT('tiny'),
+                allowNull: false,
+            },
+            lastname: {
+                type: DataTypes.TEXT('tiny'),
+                allowNull: false,
+            },
+            street: {
+                type: DataTypes.TEXT('tiny'),
+                allowNull: false,
+            },
+            location: {
+                type: DataTypes.TEXT('tiny'),
+                allowNull: false,
+            },
+            zip: {
                 type: DataTypes.TEXT('tiny'),
                 allowNull: false,
             },
@@ -36,10 +52,6 @@ module.exports = {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
                 allowNull: false,
-            },
-            premium_end: {
-                type: DataTypes.DATE,
-                allowNull: true,
             },
             created: {
                 type: DataTypes.DATE,

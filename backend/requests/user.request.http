@@ -1,0 +1,30 @@
+// Don't forget to add groups (owner / user) to db otherwise you can't register
+// User will be added to db, if verification e-mail is send
+### Registration
+POST {{url}}/user/
+Content-Type: application/x-www-form-urlencoded
+
+firstname=Max&lastname=Muster&location=Berlin&street=Musterstraße&zip=12345&email=max@muster.de&password=A!1bcdef&confirmation=true
+
+> {% client.global.set("verification_code", response.body.verification_code) %}
+
+
+### Verification
+POST {{url}}/user/verify
+Content-Type: application/x-www-form-urlencoded
+
+confirmation=true&code={{verification_code}}
+
+### Login
+POST {{url}}/user/login
+Content-Type: application/x-www-form-urlencoded
+
+email=max@muster.de&password=A!1bcdef
+
+> {% client.global.set("token", response.body.accessToken) %}
+
+### Logout
+POST {{url}}/user/logout
+Authorization: Bearer {{token}}
+
+> {% client.global.set("token", response.body.accessToken) %}
