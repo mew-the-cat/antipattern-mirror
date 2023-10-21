@@ -5,7 +5,7 @@ import "../Assets/css/advisorcard.css";
 
 interface AdvisorCardProps {
     advisor: {
-        name: string;
+        firstname: string;
         description: string;
         // ... andere Eigenschaften des advisors
     };
@@ -28,6 +28,8 @@ export function AdvisorCard({
     const [swipedOut, setSwipedOut] = useState(false);
     const [isFlipped, setIsFlipped] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
+
+    console.log("AdvisorCard: ", advisor);
 
     const { x } = useSpring({
         x: swipedOut ? (offset > 0 ? window.innerWidth : -window.innerWidth) : offset,
@@ -85,14 +87,14 @@ export function AdvisorCard({
             onClick={toggleFlip}
         >
             <div className={`card ${isFlipped ? 'flipped' : ''}`}>
-                <img src={"https://thispersondoesnotexist.com/"} alt={advisor.name} className="card-img-top" style={{ zIndex: 0, maxHeight: "400px" }} />
+                <img src={"https://thispersondoesnotexist.com/"} alt={advisor.firstname} className="card-img-top" style={{ zIndex: 0, maxHeight: "400px" }} />
 
                 {/* Farbliches Overlay */}
                 <div className="overlay" style={{ background: backgroundColor, position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, zIndex: 1 }}></div>
 
                 <div className="card-body">
-                    <h5 className="card-title">{advisor.name}</h5>
-                    <p className="card-text">{advisor.description}</p>
+                    <h5 className="card-title">{advisor.firstname}</h5>
+                    <p className="card-text">advisor.description</p>
                 </div>
 
                 <div className={`card-back ${isFlipped ? 'visible' : ''}`}>
@@ -101,8 +103,8 @@ export function AdvisorCard({
                     <div className="overlay" style={{ background: backgroundColor, position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, zIndex: 1, maxHeight: "400px"  }}></div>
 
                     <div className="card-body" style={{transform: "rotateY(180deg)"}}>
-                        <h5 className="card-title">{advisor.name}</h5>
-                        <p className="card-text">{advisor.description}</p>
+                        <h5 className="card-title">{advisor.firstname}</h5>
+                        <p className="card-text">advisor.description</p>
                     </div>
                 </div>
             </div>

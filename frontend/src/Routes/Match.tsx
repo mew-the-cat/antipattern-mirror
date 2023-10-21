@@ -22,34 +22,62 @@ import jwtDecode from "jwt-decode";
 export function Match(props: auth) {
     const [currentAdvisorIndex, setCurrentAdvisorIndex] = useState(0);
     const [offset, setOffset] = useState(0);
-
+    const [loading, setLoading] = useState(true);
     const [advisors, setAdvisors] = useState([]);
+
 
     useEffect(() => {
         //@ts-ignore
         const stuff = jwtDecode(props.authenticationToken.accessToken);
 
+
+
+
+// Beim Start der Komponente
+            //@ts-ignore
+            fetch(process.env.REACT_APP_BACKEND + "/match/" + stuff.client_id, {
+                method: "GET",
+            })
+                .then((value) => {
+                    if (value.ok) {
+                        return value.json();
+                    }
+                    throw value;
+                })
+                .then((value) => {
+                    console.log(value);
+                    setAdvisors(value);
+                    setLoading(false); // Setze den Ladezustand auf false, sobald die Daten geladen sind.
+                })
+                .catch((reason) => {
+                    setLoading(false); // Auch bei einem Fehler setze den Ladezustand auf false.
+                    // Hier evtl. eine Fehlermeldung setzen oder handhaben
+                });
+
+    }, []);
+
+    const handleAccept = (advisor: { name: any; id: any }) => {
+        console.log(`Berater ${advisor.name} wurde akzeptiert.`);
+        setCurrentAdvisorIndex(prevIndex => prevIndex + 1);
+        setOffset(0); // Offset zurücksetzen
         //@ts-ignore
-        fetch(process.env.REACT_APP_BACKEND + "/match/" + stuff.client_id, {
-            method: "GET",
+        const stuff = jwtDecode(props.authenticationToken.accessToken);
+        //@ts-ignore
+        fetch(process.env.REACT_APP_BACKEND + "/chat/conversation/" + stuff.client_id + "/" + advisor.id, {
+            method: "POST",
         }).then((value) => {
             if (value.ok) {
                 return value.json();
             }
             throw value;
-        }).then((value) => {
-            setAdvisors(value);
+        })
+        .then((value) => {
             console.log(value);
-        }).catch((reason) => {
+        })
+        .catch((reason) => {
 
         });
 
-    }, []);
-
-    const handleAccept = (advisor: { name: any; }) => {
-        console.log(`Berater ${advisor.name} wurde akzeptiert.`);
-        setCurrentAdvisorIndex(prevIndex => prevIndex + 1);
-        setOffset(0); // Offset zurücksetzen
     };
 
     const handleReject = (advisor: { name: any; }) => {
@@ -63,7 +91,9 @@ export function Match(props: auth) {
     }
 
     const currentAdvisor = advisors[currentAdvisorIndex];
-
+    if (loading) {
+        return <div>Lade Daten...</div>; // Oder einen anderen Lade-Indikator Ihrer Wahl
+    }
     return (
         <div className="d-flex flex-column vh-100">
             {/* Hauptinhalt */}
@@ -72,7 +102,7 @@ export function Match(props: auth) {
                 {currentAdvisorIndex + 1 < advisors.length && (
                     <AdvisorCard
                         //@ts-ignore
-                        key={advisors[currentAdvisorIndex + 1].Advisors[0].id}
+                        key={advisors[currentAdvisorIndex + 1].advisorData.Advisors[0].id}
                         //@ts-ignore
                         advisor={advisors[currentAdvisorIndex + 1].advisorData}
                         onAccept={() => {}}
@@ -87,7 +117,8 @@ export function Match(props: auth) {
 
                 {/* Aktuelle Karte */}
                 <AdvisorCard
-                    key={currentAdvisor.id}
+                    //@ts-ignore
+                    key={currentAdvisor.advisorData.Advisors[0].id}
                     advisor={currentAdvisor}
                     onAccept={handleAccept}
                     onReject={handleReject}
