@@ -5,6 +5,9 @@ import { Match } from "../database/models/match.model";
 import { Interest } from "../database/models/interest.model";
 import { User } from "../database/models/user.model";
 import { UserInterest } from "../database/models/userinterest.model";
+import {Client} from "../database/models/client.model";
+import {ExtractJwt} from "passport-jwt";
+import fromAuthHeaderWithScheme = ExtractJwt.fromAuthHeaderWithScheme;
 
 export default class MatchController {
   static async getRecommendation(
@@ -17,19 +20,16 @@ export default class MatchController {
       const clientId = req.params.clientId;
 
       // get Client info:
-      const clientPref = await User.finByPk({ clientId,//need to optimize!
+      const clientPref = await User.findOne({
+        where: { id: clientId },
         include: [
           {
             model: Client,
-            attribute: ["id"]
+            attributes: ["id"]
           },
           {
             model: Interest,
             attributes: ["name"],
-            through: {
-              model: UserInterest
-            }
-
           }
         ],
         attributes: []
@@ -49,9 +49,6 @@ export default class MatchController {
           {
             model: Interest,
             attributes: ["name"],
-            through: {
-              model: UserInterest
-            }
           }
         ],
         attributes: []
@@ -79,10 +76,11 @@ export default class MatchController {
         userScores.sort((a, b) => b.score - a.score);
       }
 
-      const computedScores = computeScores(clientPref, AdvisorData);
-      const sortedScoredAdvisors = sortByScore(computedScores);
+      // Wieder einkommentieren
+      //const computedScores = computeScores(clientPref, AdvisorData);
+      //const sortedScoredAdvisors = sortByScore(computedScores);
 
-      res.json(sortedScoredAdvisors);
+      //res.json(sortedScoredAdvisors);
     } catch (error) {
       return next(error);
     }

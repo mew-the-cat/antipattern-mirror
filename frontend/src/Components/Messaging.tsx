@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import "../Assets/css/messaging.css";
 import {auth} from "../Interfaces/auth.interface";
+import jwtDecode from "jwt-decode";
 
 // Need Endpoint für Messages usw.
 
@@ -16,7 +17,16 @@ const Messaging = (props: auth) => {
 
     const fetchOptions = {}
 
-    fetch(process.env.REACT_APP_BACKEND + "", fetchOptions)
+    let client_id = 0;
+    if (props.authenticationToken !== undefined) {
+        if (props.authenticationToken.accessToken != null) {
+            //@ts-ignore
+            id = jwtDecode(props.authenticationToken.accessToken).client_id;
+        }
+    }
+
+
+    fetch(process.env.REACT_APP_BACKEND + "/chat/client/" + client_id, fetchOptions)
         .then((value) => {
             if(value.ok) {
                 return value.json();

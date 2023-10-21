@@ -6,6 +6,8 @@ import {Salt} from "./salt.service";
 import {Op} from "sequelize";
 import sequelize from "../database/models/sequelize";
 import dayjs from "dayjs";
+import {Client} from "../database/models/client.model";
+import {Advisor} from "../database/models/advisor.model";
 
 const LocalStrategy = passportLocal.Strategy;
 const JWTStrategy = passportJWT.Strategy;
@@ -28,6 +30,20 @@ passport.use(
                         signup_verified: true,
                         email: email,
                     },
+                    include: [
+                        {
+                            model: Client,
+                            as: 'client',
+                            required: false,
+                            attributes: ['id']
+                        },
+                        {
+                            model: Advisor,
+                            as: 'advisor',
+                            required: false,
+                            attributes: ['id']
+                        }
+                    ]
                 });
                 console.log("bb");
 
@@ -37,7 +53,14 @@ passport.use(
                 }
                 console.log("cc");
                 if(User.validatePassword(password, user)) {
-                    return done(undefined, user, {message: "Logged in successfully"});
+                    return done(undefined, {
+                        id: user.id,
+                        email: user.email,
+                        //@ts-ignore
+                        client_id: user.client?.id,
+                        //@ts-ignore
+                        advisor_id: user.advisor?.id,
+                    }, {message: "Logged in successfully"});
                 }
                 console.log("dd");
                 return done(undefined, false, {message: "Wrong password"});
