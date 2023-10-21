@@ -1,0 +1,11 @@
+{
+    "development": {
+        "host": "config.smtp.host",
+        "port": "config.smtp.port",
+        "secure": false,
+        "auth": {
+            "user": "config.username",
+            "pass": "config.password"
+        }
+    }
+}
