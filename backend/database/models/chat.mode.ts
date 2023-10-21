@@ -1,71 +1,79 @@
-import { Model, DataTypes, Optional, Sequelize, BelongsToMany, BelongsTo } from 'sequelize';
+import {
+  Model,
+  DataTypes,
+  Optional,
+  Sequelize,
+  BelongsToMany,
+  BelongsTo,
+} from "sequelize";
 import sequelize from "./sequelize";
 
-import { User } from './user.model';
-import {ChatAttributes, ChatCreationAttributes} from "../interfaces/chat.interface";
-import { Client } from './client.model';
-import { Advisor } from './advisor.model';
+import { User } from "./user.model";
+import {
+  ChatAttributes,
+  ChatCreationAttributes,
+} from "../interfaces/chat.interface";
+import { Client } from "./client.model";
+import { Advisor } from "./advisor.model";
 
-class Chat extends Model<ChatAttributes, ChatCreationAttributes> implements ChatAttributes {
-    public id!: number;
-    
-    public created!: Date;
-    public updated!: Date;
-    public deleted?: Date;
+class Chat
+  extends Model<ChatAttributes, ChatCreationAttributes>
+  implements ChatAttributes
+{
+  public id!: number;
 
-    public client?: Client;
-    public advisor?: Advisor;
+  public created!: Date;
+  public updated!: Date;
+  public deleted?: Date;
 
-    public static associate() {
-        Chat.belongsTo(Client, {foreignKey: 'client_id'});
-        Chat.belongsTo(Advisor, {foreignKey: 'advisor_id'});
-    }
+  public client?: Client;
+  public advisor?: Advisor;
+
+  public static associate() {
+    Chat.belongsTo(Client, { foreignKey: "client_id" });
+    Chat.belongsTo(Advisor, { foreignKey: "advisor_id" });
+  }
 }
 
 Chat.init(
-    {
-        id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-        },
-        client_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-        },
-        advisor_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-        },
-        created: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        updated: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        deleted: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
+  {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
     },
-    {
-        sequelize,
-        modelName: 'Chat',
-        timestamps: true,
-        paranoid: true,
-        createdAt: 'created',
-        updatedAt: 'updated',
-        deletedAt: 'deleted',
-    }
+    client_id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    advisor_id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    created: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updated: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    deleted: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+  },
+  {
+    sequelize,
+    modelName: "Chat",
+    timestamps: true,
+    paranoid: true,
+    createdAt: "created",
+    updatedAt: "updated",
+    deletedAt: "deleted",
+  }
 );
-
-
-
 
 export { Chat };
 
