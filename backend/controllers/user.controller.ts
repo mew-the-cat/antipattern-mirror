@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import {User} from "../database/models/user.model";
 import {Op} from "sequelize";
 import sequelize from "../database/models/sequelize";
+import {Advisor} from "../database/models/advisor.model";
+import { Client } from "../database/models/client.model";
 
 export default class UserController {
   static async createUser(
@@ -20,10 +22,11 @@ export default class UserController {
       const {location} = req.body;
       const {street} = req.body;
       const {zip} = req.body;
+      const {role} = req.body;
 
       const {email} = req.body;
       const {password} = req.body;
-      const {confirmation} = req.body;
+      const confirmation = true;
 
       const userEmail = await User.findOne({
         where: {
@@ -50,7 +53,7 @@ export default class UserController {
         salt: salt,
         password: hashPassword,
         confirmation: confirmation
-      }, {transaction: t}).then(user => {
+      }, {transaction: t}).then(async (user) => {
         const env = process.env.NODE_ENV || 'development';
         if(env === "development") {
           const verificationCode = crypto.createHash('md5').update(
@@ -62,6 +65,16 @@ export default class UserController {
 
           console.info(req.method + "-" + req.url + ": Create User entry successful! User: ", user);
 
+          if(role === "advisor") {
+            const advisor = Advisor.create({
+              user_id: user.id
+            }, {transaction: t});
+          } else {
+            const client = Client.create({
+              user_id: user.id
+            }, {transaction: t});
+          }
+
           User.sendVerificationMail(user, {transaction: t});
 
           return res.status(200).json({
@@ -69,6 +82,16 @@ export default class UserController {
             email: email,
             verification_code: verificationCode
           });
+        }
+
+        if(role === "advisor") {
+          const advisor = Advisor.create({
+            user_id: user.id
+          }, {transaction: t});
+        } else {
+          const client = Client.create({
+            user_id: user.id
+          }, {transaction: t});
         }
 
         console.info(req.method + "-" + req.url + ": Create User entry successful! User: ", user);
@@ -145,7 +168,15 @@ export default class UserController {
 
   static async getAll(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
+        const users = await User.findAll({
+            where: {
+              confirmation: true,
+              signup_verified: true
+            }
+        });
 
+        console.info(req.method + "-" + req.url + ": Get Users entry successful! Users: ", users);
+        return res.status(200).json(users);
     } catch (error) {
       return next(error);
     }

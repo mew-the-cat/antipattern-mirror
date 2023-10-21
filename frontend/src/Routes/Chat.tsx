@@ -1,7 +1,11 @@
 import Messaging from "../Components/Messaging";
+import {auth} from "../Interfaces/auth.interface";
 
-export function Chat() {
+export function Chat(props: auth) {
     return (
-        <Messaging />
+        <Messaging
+            authenticationToken={props.authenticationToken}
+            setAuthenticationToken={props.setAuthenticationToken}
+        />
     );
 }

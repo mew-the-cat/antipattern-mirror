@@ -7,11 +7,10 @@ import {Match} from "./Routes/Match";
 import {useLocalStorage} from "./Hooks/useLocaleStorage";
 import { Menu } from "./Components/Menu";
 import {Chat} from "./Routes/Chat";
+import {Logout} from "./Routes/Logout";
 
 export function App() {
-    const [authenticationToken, setAuthenticationToken] = useLocalStorage("authenticationToken", {
-        expiresIn: 0
-    });
+    const [authenticationToken, setAuthenticationToken] = useLocalStorage("authenticationToken", undefined);
 
     // @ts-ignore
     return (
@@ -30,15 +29,35 @@ export function App() {
                 <Routes>
 
                     <Route path="/" element={
-                        <Index />
+                        <Index
+                            key={"index"}
+                            authenticationToken={authenticationToken}
+                            setAuthenticationToken={setAuthenticationToken}
+                        />
                     } />
 
                     <Route path="/match" element={
-                        <Match />
+                        <Match
+                            key={"match"}
+                            authenticationToken={authenticationToken}
+                            setAuthenticationToken={setAuthenticationToken}
+                        />
                     } />
 
                     <Route path="/chat" element={
-                        <Chat />
+                        <Chat
+                            key={"chat"}
+                            authenticationToken={authenticationToken}
+                            setAuthenticationToken={setAuthenticationToken}
+                        />
+                    } />
+
+                    <Route path="/logout" element={
+                        <Logout
+                            key={"logout"}
+                            authenticationToken={authenticationToken}
+                            setAuthenticationToken={setAuthenticationToken}
+                        />
                     } />
 
                 </Routes>

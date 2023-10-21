@@ -21,14 +21,17 @@ passport.use(
         console.log("login");
             try {
                 console.log("aa");
+                console.log(email);
                 const user = await User.findOne({
                     where: {
                         confirmation: true,
                         signup_verified: true,
-                        email
+                        email: email,
                     },
                 });
                 console.log("bb");
+
+                console.log(user);
                 if(!user) {
                     return done(undefined, false, {message: "User not found"});
                 }

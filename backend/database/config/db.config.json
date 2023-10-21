@@ -1,9 +1,16 @@
 {
-    "development": {
-      "username": "antipattern-mirror",
-      "password": "antipattern-mirror",
-      "database": "antipattern-mirror",
-      "host": "localhost",
-      "dialect": "mariadb"
-    }
+  "development": {
+    "username": "antipattern-mirror",
+    "password": "antipattern-mirror",
+    "database": "antipattern-mirror",
+    "host": "localhost",
+    "dialect": "mariadb"
+  },
+  "production": {
+    "username": "antipattern-mirror",
+    "password": "antipattern-mirror",
+    "database": "antipattern-mirror",
+    "host": "localhost",
+    "dialect": "mariadb"
+  }
   }
