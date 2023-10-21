@@ -188,9 +188,13 @@ export default class ChatController {
           chat_id: chatId,
           from_id: fromId,
           message: message,
+      }).then((value) => {
+        return res.status(200).json({
+          value
+        });
+      }).catch((error) => {
+        return res.status(400).json(error);
       });
-
-      res.status(201);
     } catch (error) {
       return next(error);
     }

@@ -16,7 +16,7 @@ routes.get(
 );
 
 // Get ALL open chats of the given client user
-routes.get("/chat/user/:clientId", ChatController.getAllChatsOfClientUser);
+routes.get("/chat/client/:clientId", ChatController.getAllChatsOfClientUser);
 
 // Get ALL open chats of the given advisor user
 routes.get("/chat/advisor/:advisorId", ChatController.getAllChatsOfAdvisorUser);
