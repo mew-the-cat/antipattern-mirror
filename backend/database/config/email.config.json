@@ -1,11 +1,10 @@
 {
     "development": {
-        "host": "smtp.ethereal.email",
-        "port": "587",
-        "secure": false,
-        "auth": {
-            "user": "augustine.will16@ethereal.email",
-            "pass": "PUtcyAFXvkefwkeUhK"
-        }
+        "smtp":{
+            "host": "smtp.ethereal.email",
+            "port": "587"
+        },
+        "user": "augustine.will16@ethereal.email",
+        "pass": "PUtcyAFXvkefwkeUhK"
     }
 }
