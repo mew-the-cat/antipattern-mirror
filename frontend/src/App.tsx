@@ -74,7 +74,7 @@ export function App() {
                 {/* Footer */}
                 <footer className="py-4 bg-dark text-white text-center">
                     <Container>
-                        © 2023 FinTwin. Alle Rechte vorbehalten.
+                        © 2023 Antipattern Mirror. All rights reserved.
                     </Container>
                 </footer>
             </Container>
