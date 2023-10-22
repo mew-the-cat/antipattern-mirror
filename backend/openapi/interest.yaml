@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  title: Interest API
+  version: 1.0.0
+paths:
+  /interests:
+    get:
+      summary: Get all interests
+      responses:
+        '200':
+          description: Successful retrieval of interests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Interest'
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    Interest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32

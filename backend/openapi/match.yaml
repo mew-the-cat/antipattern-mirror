@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  title: Match API
+  version: 1.0.0
+paths:
+  /match/recommendation/{clientId}:
+    get:
+      summary: Get best matching advisor for a client based on interests
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          description: Client's unique ID
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Successful retrieval of best matching advisor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScoredAdvisor'
+        '404':
+          description: Client not found
+        '500':
+          description: Server error
+
+  /match/initiate/{clientId}/{advisorId}:
+    post:
+      summary: Initiate a match between a client and advisor
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: advisorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '201':
+          description: Match initiated successfully
+        '500':
+          description: Server error
+
+  /match/accept/{matchId}:
+    post:
+      summary: Accept a match based on matchId
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Match accepted successfully
+        '404':
+          description: Match not found
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    ScoredAdvisor:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        score:
+          type: number
+        advisorData:
+          $ref: '#/components/schemas/AdvisorData'
+
+    AdvisorData:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        street:
+          type: string
+        location:
+          type: string
+        zip:
+          type: string

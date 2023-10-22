@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: Message API
+  version: 1.0.0
+paths:
+  /chat/{chatId}/message:
+    post:
+      summary: Create a new message for a specific chat
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: ID of the chat for which the message is being created
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMessage'
+      responses:
+        '201':
+          description: Message created successfully
+        '400':
+          description: Bad request (e.g., missing required fields)
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    NewMessage:
+      type: object
+      properties:
+        from_id:
+          type: integer
+          format: int32
+          description: ID of the sender of the message
+        message:
+          type: string
+          description: Content of the message
+      required:
+        - from_id
+        - message

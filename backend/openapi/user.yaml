@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: User API
+  version: 1.0.0
+paths:
+  /user:
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '200':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedUserResponse'
+        '400':
+          description: Bad request (e.g., missing required fields or email already exists)
+        '500':
+          description: Server error
+  /user/{id}:
+    get:
+      summary: Retrieve a user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+        '500':
+          description: Server error
+  /user/verify:
+    post:
+      summary: Verify a user's email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyUser'
+      responses:
+        '200':
+          description: User verified successfully
+        '400':
+          description: Verification failed (e.g., user is already verified or code is wrong)
+        '500':
+          description: Server error
+  /users:
+    get:
+      summary: Retrieve all users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Server error
+  /user/login:
+    post:
+      summary: User login
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Login failed
+        '500':
+          description: Server error
+  /user/logout:
+    post:
+      summary: User logout
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        '400':
+          description: Logout failed
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    NewUser:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        location:
+          type: string
+        street:
+          type: string
+        zip:
+          type: integer
+        role:
+          type: string
+          enum: [advisor, client]
+        email:
+          type: string
+        password:
+          type: string
+        interests:
+          type: array
+          items:
+            type: integer
+      required:
+        - firstname
+        - lastname
+        - location
+        - street
+        - zip
+        - role
+        - email
+        - password
+
+    CreatedUserResponse:
+      type: object
+      properties:
+        firstname:
+          type: string
+        email:
+          type: string
+        verification_code:
+          type: string
+
+    VerifyUser:
+      type: object
+      properties:
+        code:
+          type: string
+      required:
+        - code
+
+    User:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        location:
+          type: string
+        street:
+          type: string
+        zip:
+          type: integer
+        email:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+        expiresAt:
+          type: integer
+
+    LogoutResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+        expiresAt:
+          type: integer
+

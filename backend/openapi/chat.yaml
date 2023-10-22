@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  title: Chat API
+  version: 1.0.0
+paths:
+  /chat/{clientId}/{advisorId}:
+    post:
+      summary: Create a new chat
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: advisorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat created successfully
+        '400':
+          description: Error occurred while creating chat
+    delete:
+      summary: Delete an existing chat
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: advisorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat deleted successfully
+        '400':
+          description: Error occurred while deleting chat
+        '404':
+          description: Chat not found
+
+  /chat/{clientId}/{advisorId}/messages:
+    get:
+      summary: Get one chat between two users
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: advisorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat retrieved successfully
+        '404':
+          description: Chat not found
+
+  /chats/client/{clientId}:
+    get:
+      summary: Get all chats of a client user
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chats retrieved successfully
+
+  /chats/advisor/{advisorId}:
+    get:
+      summary: Get all chats of an advisor user
+      parameters:
+        - name: advisorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chats retrieved successfully
+
+  /message/{chatId}/{fromId}:
+    post:
+      summary: Send a message
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: fromId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Message sent successfully
+        '400':
+          description: Error occurred while sending message
+
