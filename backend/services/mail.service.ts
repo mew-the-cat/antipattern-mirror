@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 export class Mail {
     static send(to: string | undefined, subject: string | undefined, text: string | undefined, html: string | undefined): Promise<SMTPTransport.SentMessageInfo> {
         return transporter.sendMail({
-            from: 'Test',
+            from: 'FinTwin',
             to: to,
             subject: subject,
             text: text,
@@ -32,40 +32,42 @@ export class Mail {
             return `
                 <img src="https://via.placeholder.com/600x100?text=Banner" width="100%" alt="Banner" />
                 <div style="padding: 15px">
-                    <h1>Verifizierung deines Accounts auf _______________</h1>
-                    <p style="font-size: large">
-                        Hey ${user.firstname}!<br /> <br />
-            
-                        Wir sind froh, dass du dich bei uns registriert hast und ein Teil von _________ werden willst! Bevor du dich jedoch ins getümmel stürzen kannst, musst du dein Konto verifizieren.<br /> <br />
-                
-                        Keine Sorge, das geht ganz schnell und einfach. Alles, was du dafür tun musst, ist auf den untenstehenden Link zu klicken und den Anweisungen zu befolgen, um dein Konto zu verifizieren. Sobald du das getan hast, kannst du alle Funktionen deines Kontos nutzen.<br /> <br />
-                
-                        Hier ist der Link zur Verifizierung deines Kontos: <strong><a href="${process.env.REACT_APP_FRONTEND + "/registration/verification?code=" + verificationCode}">Verifizier mich!</a></strong><br /> <br />
-                
-                        Wenn du irgendwelche Fragen hast, zögere nicht, uns zu kontaktieren. Wir sind immer hier, um dir zu helfen.<br /> <br />
-                
-                        Beste Grüße,<br />
-                        ________________________
-                    </p>
+                    <h1>Verifying your Account on _______________</h1>
+<p style="font-size: large">
+    Hey ${user.firstname}!<br /> <br />
+
+    We're glad you've registered with us and want to become a part of _________! However, before you can dive in, you need to verify your account.<br /> <br />
+
+    Don't worry, it's quick and easy. All you have to do is click the link below and follow the instructions to verify your account. Once you've done that, you can use all the features of your account.<br /> <br />
+
+    Here's the link to verify your account: <strong><a href="${process.env.REACT_APP_FRONTEND + "/registration/verification?code=" + verificationCode}">Verify me!</a></strong><br /> <br />
+
+    If you have any questions, don't hesitate to contact us. We're always here to help.<br /> <br />
+
+    Best regards,<br />
+    ________________________
+</p>
+
                 </div>
             `;
         }
         return `
-Verifizierung deines Accounts auf _______________
+Verifying your Account on _______________
 
 Hey ${user.firstname}!
 
-Wir sind froh, dass du dich bei uns registriert hast und ein Teil von _________ werden willst! Bevor du dich jedoch ins getümmel stürzen kannst, musst du dein Konto verifizieren.
+We're glad you've registered with us and want to become a part of _________! However, before you can dive in, you need to verify your account.
 
-Keine Sorge, das geht ganz schnell und einfach. Alles, was du dafür tun musst, ist auf den untenstehenden Link zu klicken und den Anweisungen zu befolgen, um dein Konto zu verifizieren. Sobald du das getan hast, kannst du alle Funktionen deines Kontos nutzen.
+Don't worry, it's quick and easy. All you have to do is click the link below and follow the instructions to verify your account. Once you've done that, you can use all the features of your account.
 
-Hier ist der Link zur Verifizierung deines Kontos: ${process.env.REACT_APP_FRONTEND + "/registration/verification?code=" + verificationCode}
+Here's the link to verify your account: ${process.env.REACT_APP_FRONTEND + "/registration/verification?code=" + verificationCode}
 
-Wenn du irgendwelche Fragen hast, zögere nicht, uns zu kontaktieren. Wir sind immer hier, um dir zu helfen.
+If you have any questions, don't hesitate to contact us. We're always here to help.
 
-Beste Grüße,
+Best regards,
 ________________________
-        `;
+`;
+
     }
 
     static createPasswordResetMail(user: User, recoveryCode: string, recoveryNumber: string, html: boolean): string {
@@ -74,49 +76,51 @@ ________________________
             return `
                 <img src="https://via.placeholder.com/600x100?text=Banner" width="100%" alt="Banner" />
                 <div style="padding: 15px">
-                    <h1>Zurücksetzen deines Passworts auf _______________</h1>
-                    <p style="font-size: large">
-                        Hallo ${user.firstname},<br /><br />
-    
-                        wir haben bemerkt, dass du dein Passwort für deinen _________ Account vergessen hast. Keine Sorge, wir haben das im Griff und helfen dir gerne weiter!<br /><br />
-                        
-                        Klicke einfach auf den folgenden Link, um dein Passwort zurückzusetzen: <strong><a href="${process.env.REACT_APP_FRONTEND + "/password/reset?code=" + recoveryCode}">Klick mich</a></strong><br /><br />
-                        
-                        Du wirst dann auf eine Seite weitergeleitet, auf der du einen Sicherheitscode eingeben musst. Dieser Code wurde dir ebenfalls in dieser E-Mail zugeschickt und ist nur für dich bestimmt. Wenn du ihn eingegeben hast, kannst du dein neues Passwort erstellen und dich wieder in deinen Account einloggen.<br /><br />
-                        
-                        Code zum Zurücksetzen deines Passworts: <strong>${recoveryNumber}</strong><br /><br />
-                        
-                        Und wenn du dich fragst, wie du dein Passwort vergessen konntest, keine Sorge, es passiert den Besten von uns! Aber jetzt ist es Zeit, dein Passwort zurückzusetzen und wieder durchzustarten.<br /><br />
-                        
-                        Wir hoffen, dass dir dieser Vorgang einfach und problemlos gelingt. Wenn du jedoch Hilfe benötigst, zögere nicht, uns jederzeit zu kontaktieren.<br /><br />
-                        
-                        Viele Grüße,<br />
-                        ____________
-                    </p>
+                    <h1>Resetting Your Password on _______________</h1>
+<p style="font-size: large">
+    Hello ${user.firstname},<br /><br />
+
+    we noticed you forgot your password for your _________ account. Don't worry, we've got this covered and are here to help!<br /><br />
+
+    Simply click on the following link to reset your password: <strong><a href="${process.env.REACT_APP_FRONTEND + "/password/reset?code=" + recoveryCode}">Click me</a></strong><br /><br />
+
+    You'll be redirected to a page where you'll need to enter a security code. This code has also been sent to you in this email and is meant just for you. Once you've entered it, you can set your new password and log back into your account.<br /><br />
+
+    Code to reset your password: <strong>${recoveryNumber}</strong><br /><br />
+
+    And if you're wondering how you could've forgotten your password, don't fret, it happens to the best of us! But now, it's time to reset your password and get back on track.<br /><br />
+
+    We hope this process is easy and seamless for you. However, if you need assistance, don't hesitate to contact us at any time.<br /><br />
+
+    Warm regards,<br />
+    ____________
+</p>
+
                 </div>
             `;
         }
 
         return `
-Zurücksetzen deines Passworts auf _______________
+Resetting Your Password on _______________
 
-Hallo ${user.firstname},
+Hello ${user.firstname},
 
-wir haben bemerkt, dass du dein Passwort für deinen _________ Account vergessen hast. Keine Sorge, wir haben das im Griff und helfen dir gerne weiter!
+we noticed you forgot your password for your _________ account. Don't worry, we've got this covered and are here to help!
 
-Klicke einfach auf den folgenden Link, um dein Passwort zurückzusetzen: ${process.env.REACT_APP_FRONTEND + "/password/reset?code=" + recoveryCode}
+Simply click on the following link to reset your password: ${process.env.REACT_APP_FRONTEND + "/password/reset?code=" + recoveryCode}
 
-Du wirst dann auf eine Seite weitergeleitet, auf der du einen Sicherheitscode eingeben musst. Dieser Code wurde dir ebenfalls in dieser E-Mail zugeschickt und ist nur für dich bestimmt. Wenn du ihn eingegeben hast, kannst du dein neues Passwort erstellen und dich wieder in deinen Account einloggen.
+You'll be redirected to a page where you'll need to enter a security code. This code has also been sent to you in this email and is meant just for you. Once you've entered it, you can set your new password and log back into your account.
 
-Code zum Zurücksetzen deines Passworts: ${recoveryNumber}
+Code to reset your password: ${recoveryNumber}
 
-Und wenn du dich fragst, wie du dein Passwort vergessen konntest, keine Sorge, es passiert den Besten von uns! Aber jetzt ist es Zeit, dein Passwort zurückzusetzen und wieder durchzustarten.
+And if you're wondering how you could've forgotten your password, don't fret, it happens to the best of us! But now, it's time to reset your password and get back on track.
 
-Wir hoffen, dass dir dieser Vorgang einfach und problemlos gelingt. Wenn du jedoch Hilfe benötigst, zögere nicht, uns jederzeit zu kontaktieren.
+We hope this process is easy and seamless for you. However, if you need assistance, don't hesitate to contact us at any time.
 
-Viele Grüße,
+Warm regards,
 ____________
-        `;
+`;
+
 
     }
 
@@ -126,40 +130,42 @@ ____________
             return `
                 <img src="https://via.placeholder.com/600x100?text=Banner" width="100%" alt="Banner" />
                 <div style="padding: 15px">
-                    <h1>Löschen deines Accounts auf _______________</h1>
-                    <p style="font-size: large">
-                        Hey ${user.firstname}, <br /><br />
-            
-                        wir haben deine Nachricht erhalten und es tut uns wirklich leid zu hören, dass du deinen Account bei uns löschen möchtest. Du hast sicher deine Gründe! Dennoch sind wir traurig, zumindest deinen Account zu verlieren und hoffen, dich dennoch als Kunden behalten zu können. <br /><br />
-                        
-                        Wenn du wirklich entschieden hast, dass du deinen Account löschen möchtest, dann haben wir für dich einen einfachen Prozess bereitgestellt. Folge einfach diesem Link <strong><a href="${"http://127.0.0.1:3000/user/account/delete/" + forfeitCode}">Account löschen</a></strong> und gib den folgenden Code ein: <strong>${forfeitNumber}</strong> <br /><br />
-                        
-                        Bevor du den Löschungsprozess startest, möchten wir sicherstellen, dass du diese Entscheidung bewusst triffst. Solltest du uns Feedback geben wollen oder falls wir etwas verbessern können, sind wir gerne für dich da. Schreib uns einfach eine E-Mail an [E-MAIL EINFÜGEN] und wir werden uns umgehend bei dir melden.<br /><br />
-                        
-                        Wir möchten uns für die Zeit bedanken, die du mit uns verbracht hast und hoffen, dass wir uns in Zukunft wiedersehen werden.<br /><br />
-                        
-                        Viele Grüße,<br />
-                        ________________
-                    </p>
+                    <h1>Deleting Your Account on _______________</h1>
+<p style="font-size: large">
+    Hey ${user.firstname}, <br /><br />
+
+    we've received your message and are genuinely sorry to hear that you wish to delete your account with us. You surely have your reasons! Nevertheless, we're sad to at least lose your account and hope we can still retain you as a customer. <br /><br />
+    
+    If you've truly decided that you want to delete your account, we've set up a straightforward process for you. Simply follow this link <strong><a href="${"http://127.0.0.1:3000/user/account/delete/" + forfeitCode}">Delete Account</a></strong> and enter the following code: <strong>${forfeitNumber}</strong> <br /><br />
+    
+    Before you initiate the deletion process, we want to ensure that you're making this decision consciously. If you'd like to provide us with feedback or think there's something we can improve upon, we're here for you. Just send us an email at [INSERT EMAIL] and we'll get back to you promptly.<br /><br />
+    
+    We'd like to thank you for the time you've spent with us and hope that we'll see you again in the future.<br /><br />
+    
+    Warm regards,<br />
+    ________________
+</p>
+
                 </div>
             `;
         }
 
         return `
-Löschen deines Accounts auf _______________
+Deleting Your Account on _______________
 
 Hey ${user.firstname},
 
-wir haben deine Nachricht erhalten und es tut uns wirklich leid zu hören, dass du deinen Account bei uns löschen möchtest. Du hast sicher deine Gründe! Dennoch sind wir traurig, zumindest deinen Account zu verlieren und hoffen, dich dennoch als Kunden behalten zu können.
+We've received your message and are genuinely sorry to hear that you wish to delete your account with us. You surely have your reasons! Nevertheless, we're sad to at least lose your account and hope to still retain you as a customer.
 
-Wenn du wirklich entschieden hast, dass du deinen Account löschen möchtest, dann haben wir für dich einen einfachen Prozess bereitgestellt. Folge einfach diesem Link http://127.0.0.1:3000/user/account/delete/${forfeitCode} und gib den folgenden Code ein: ${forfeitNumber}
+If you've truly decided that you want to delete your account, we've set up a straightforward process for you. Simply follow this link http://127.0.0.1:3000/user/account/delete/${forfeitCode} and enter the following code: ${forfeitNumber}
 
-Bevor du den Löschungsprozess startest, möchten wir sicherstellen, dass du diese Entscheidung bewusst triffst. Solltest du uns Feedback geben wollen oder falls wir etwas verbessern können, sind wir gerne für dich da. Schreib uns einfach eine E-Mail an [E-MAIL EINFÜGEN] und wir werden uns umgehend bei dir melden.
+Before you initiate the deletion process, we want to ensure that you're making this decision consciously. If you'd like to provide us with feedback or think there's something we can improve upon, we're here for you. Just send us an email at [INSERT EMAIL] and we'll get back to you promptly.
 
-Wir möchten uns für die Zeit bedanken, die du mit uns verbracht hast und hoffen, dass wir uns in Zukunft wiedersehen werden.
+We'd like to thank you for the time you've spent with us and hope that we'll see you again in the future.
 
-Viele Grüße,
+Warm regards,
 ________________
-        `;
+`;
+
     }
 }
