@@ -9,6 +9,7 @@ import {Op} from "sequelize";
 import sequelize from "../database/models/sequelize";
 import {Advisor} from "../database/models/advisor.model";
 import { Client } from "../database/models/client.model";
+import {UserInterest} from "../database/models/userinterest.model";
 
 export default class UserController {
   static async createUser(
@@ -28,6 +29,8 @@ export default class UserController {
       const {password} = req.body;
       const confirmation = true;
 
+      const {interests} = req.body;
+      console.log(email);
       const userEmail = await User.findOne({
         where: {
           email: email
@@ -55,6 +58,15 @@ export default class UserController {
         confirmation: confirmation,
         signup_verified: true,
       }, {transaction: t}).then(async (user) => {
+
+        const promises = [];
+        for(let i = 0; i < interests.length; i++) {
+          promises.push(UserInterest.create({
+            user_id: user.id,
+            interest_id: interests[i]
+          }));
+        }
+
         const env = process.env.NODE_ENV || 'development';
         if(env === "development") {
           const verificationCode = crypto.createHash('md5').update(
@@ -98,6 +110,10 @@ export default class UserController {
         console.info(req.method + "-" + req.url + ": Create User entry successful! User: ", user);
 
         User.sendVerificationMail(user, {transaction: t});
+
+        Promise.all(promises).then(_res => {
+          console.log(_res);
+        });
 
         return res.status(200).json({
           firstname: firstname,

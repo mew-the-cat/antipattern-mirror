@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import "../Assets/css/index.css"
 import {Button, Card, Col, Container, Form, Row, Tab, Tabs} from "react-bootstrap";
 import {auth} from "../Interfaces/auth.interface";
@@ -10,6 +10,40 @@ export function Index(props: auth) {
     const [key, setKey] = useState('login');
 
     const [validated, setValidated] = useState(false);
+
+    const [interests, setInterests] = useState([]);
+
+    const [selectedInterests, setSelectedInterests] = useState([]);
+
+    useEffect(() => {
+        console.log("Selected interests:", selectedInterests);
+    }, [selectedInterests]);
+
+    const handleInterestChange = (event: any) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            // @ts-ignore
+            setSelectedInterests([...selectedInterests, value]);
+        } else {
+            setSelectedInterests(selectedInterests.filter((interest) => interest !== value));
+        }
+    };
+
+    useEffect(() => {
+        fetch(process.env.REACT_APP_BACKEND + "/interest", {
+
+        }).then((value) => {
+            if (value.ok) {
+                return value.json();
+            }
+            throw value;
+        }).then((value) => {
+            setInterests(value);
+            console.log(value);
+        }).catch((reason) => {
+
+        });
+    }, []);
 
     const handleLoginSubmit = (event: { currentTarget: any; preventDefault: () => void; stopPropagation: () => void; }) => {
         const form = event.currentTarget;
@@ -61,7 +95,7 @@ export function Index(props: auth) {
         } else {
             event.preventDefault();
 
-            const formData = new URLSearchParams({
+            /*const formData = new URLSearchParams({
                 "firstname": form["firstname"].value,
                 "lastname": form["lastname"].value,
                 "location": form["location"].value,
@@ -70,11 +104,26 @@ export function Index(props: auth) {
                 "email": form["email"].value,
                 "password": form["password"].value,
                 "role": form["role"].value,
-            });
+            });*/
+
+            const formData = {
+                "firstname": form["firstname"].value,
+                "lastname": form["lastname"].value,
+                "location": form["location"].value,
+                "street": form["street"].value,
+                "zip": form["zip"].value,
+                "email": form["email"].value,
+                "password": form["password"].value,
+                "role": form["role"].value,
+                "interests": selectedInterests,
+            }
 
             fetch(process.env.REACT_APP_BACKEND + "/user", {
                 method: "POST",
-                body: formData,
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData)
             })
                 .then((value) => {
                     if (value.ok) {
@@ -198,6 +247,22 @@ export function Index(props: auth) {
                                                 value="advisor"
                                                 id="advisorRadio"
                                             />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Interests</Form.Label>
+                                            {interests.map((interest) => (
+                                                <Form.Check
+                                                    // @ts-ignore
+                                                    key={interest.id}
+                                                    type="checkbox"
+                                                    // @ts-ignore
+                                                    label={interest.name}
+                                                    // @ts-ignore
+                                                    value={interest.id}
+                                                    onChange={handleInterestChange}
+                                                />
+                                            ))}
                                         </Form.Group>
 
                                         <Button variant="primary" type="submit">
