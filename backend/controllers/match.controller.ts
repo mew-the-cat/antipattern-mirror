@@ -7,6 +7,7 @@ import { User } from "../database/models/user.model";
 import { UserInterest } from "../database/models/userinterest.model";
 import {Client} from "../database/models/client.model";
 import {ExtractJwt} from "passport-jwt";
+import * as tf from '@tensorflow/tfjs-node';
 import fromAuthHeaderWithScheme = ExtractJwt.fromAuthHeaderWithScheme;
 
 export default class MatchController {
@@ -86,12 +87,56 @@ export default class MatchController {
           let scoreset: Set<string> = new Set();
           dataset.forEach(element => {if (userset.has(element)) {scoreset.add(element)}})
           // maybe only userset size for max. personalization!
-          const score =  scoreset.size / (userset.size + dataset.size)
+          const mymodel = trainModel();
+          const divisor = addIntegers(mymodel, userset.size, dataset.size);
+          const score = scoreset.size / +divisor;
+          //const score =  scoreset.size / (userset.size + dataset.size)
           //@ts-ignore
           scores.push({ id: data[i].id, score: score , advisorData: data[i].advisorData});
         }
         return scores;
       };
+
+
+async function trainModel() {
+  // Define the model architecture
+  const model = tf.sequential();
+  model.add(tf.layers.dense({ units: 1, inputShape: [2] }));
+
+  // Compile the model
+  model.compile({
+    loss: 'meanSquaredError',
+    optimizer: 'sgd',
+  });
+
+  // Training data
+  const xs = tf.tensor2d([[1, 2], [2, 3], [3, 4], [4, 5]], [4, 2]);
+  const ys = tf.tensor2d([[3], [5], [7], [9]], [4, 1]);
+
+  // Train the model
+  await model.fit(xs, ys, { epochs: 500 });
+
+  return model;
+}
+
+async function addIntegers(model:any, arg1:any, arg2:any) {
+  // Use the trained model to predict the sum of arg1 and arg2
+  const input = tf.tensor2d([[arg1, arg2]], [1, 2]);
+  const result = model.predict(input);
+
+  const data = await result.data();
+  return data[0];
+}
+
+
+  const trainedModel = await trainModel();
+  const arg1 = 5; // Your first number
+  const arg2 = 6; // Your second number
+
+  const sum = await addIntegers(trainedModel, arg1, arg2);
+  
+
+
 
       const sortByScore = (userScores: { id: number; score: number }[]) => {
         // Sorting the array of objects by the 'score' property
